@@ -1,17 +1,25 @@
 import { useState } from 'react'
 import FlowEditor from './FlowEditor'
+import Chat from './Chat'
 import './App.css'
 
-type Tab = 'flow' | 'agents' | 'channels' | 'settings'
+type Tab = 'flow' | 'chat' | 'agents' | 'channels' | 'settings'
 
 function App() {
-  const [activeTab, setActiveTab] = useState<Tab>('flow')
+  const [activeTab, setActiveTab] = useState<Tab>('chat')
+  const [currentUser] = useState('user-001') // 模拟用户ID
 
   return (
     <div className="app">
       <header className="header">
-        <h1>🚀 AgentFlow</h1>
+        <h1>🚀 CorpFlow</h1>
         <nav>
+          <button 
+            className={activeTab === 'chat' ? 'active' : ''} 
+            onClick={() => setActiveTab('chat')}
+          >
+            💬 对话
+          </button>
           <button 
             className={activeTab === 'flow' ? 'active' : ''} 
             onClick={() => setActiveTab('flow')}
@@ -40,6 +48,7 @@ function App() {
       </header>
       
       <main className="main">
+        {activeTab === 'chat' && <Chat userId={currentUser} />}
         {activeTab === 'flow' && <FlowEditor />}
         {activeTab === 'agents' && <AgentsPanel />}
         {activeTab === 'channels' && <ChannelsPanel />}
