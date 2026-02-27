@@ -12,7 +12,7 @@
   <!-- Input Layer -->
   <rect x="50" y="40" width="800" height="55" rx="8" fill="#DBEAFE" stroke="#2563EB" stroke-width="2"/>
   <text x="450" y="62" font-size="14" fill="#1E40AF" font-weight="bold" text-anchor="middle">🔵 INPUT LAYER</text>
-  <text x="450" y="82" font-size="11" fill="#3B82F6" text-anchor="middle">📱 Mobile (iOS/Android) &nbsp; 🌐 Web (React) &nbsp; 💬 Channels (Feishu/WeChat/Telegram/Discord)</text>
+  <text x="450" y="82" font-size="11" fill="#3B82F6" text-anchor="middle">📱 Mobile (iOS/Android)   🌐 Web (React)   💬 Channels (Feishu/WeChat/Telegram/Discord)</text>
   
   <path d="M450,95 L450,110" stroke="#64748B" stroke-width="2" marker-end="url(#arrow)"/>
   
@@ -97,12 +97,12 @@
   <!-- Output Layer -->
   <rect x="50" y="535" width="800" height="45" rx="8" fill="#FEE2E2" stroke="#DC2626" stroke-width="2"/>
   <text x="450" y="560" font-size="14" fill="#991B1B" font-weight="bold" text-anchor="middle">🔴 OUTPUT LAYER</text>
-  <text x="450" y="575" font-size="11" fill="#EF4444" text-anchor="middle">💬 Response &nbsp; 📊 Logs &nbsp; 📤 Export</text>
+  <text x="450" y="575" font-size="11" fill="#EF4444" text-anchor="middle">💬 Response   📊 Logs   📤 Export</text>
   
   <path d="M450,580 L450,595" stroke="#64748B" stroke-width="2" marker-end="url(#arrow)"/>
   
   <!-- Data Layer -->
   <rect x="50" y="605" width="800" height="65" rx="8" fill="#F1F5F9" stroke="#475569" stroke-width="2"/>
   <text x="450" y="630" font-size="14" fill="#1E293B" font-weight="bold" text-anchor="middle">⚫ DATA LAYER</text>
-  <text x="450" y="652" font-size="10" fill="#6B7280" text-anchor="middle">🗄️ PostgreSQL (Agents/Flows/Messages) &nbsp; ⚡ Redis (Cache/Session) &nbsp; 📁 File Store (Templates/Exports)</text>
+  <text x="450" y="652" font-size="10" fill="#6B7280" text-anchor="middle">🗄️ PostgreSQL (Agents/Flows/Messages)   ⚡ Redis (Cache/Session)   📁 File Store (Templates/Exports)</text>
 </svg>
