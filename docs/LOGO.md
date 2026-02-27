@@ -4,31 +4,30 @@
 
 | File | Description | Use Case |
 |------|-------------|----------|
-| `logo.svg` | Fox logo vector | Web, Print |
+| `logo.svg` | Horse logo vector | Web, Print |
 | `logo-full.svg` | High resolution | Mobile apps |
 | `logo.png` | Raster version | Mobile apps |
 
 ## Logo Design
 
 ### Concept
-- **Fox** - Smart, clever, intelligent animal
-- Orange gradient (#FF6B35 → #F7931E)
-- White face with expressive eyes
+- **Horse** - Power, speed, intelligence
+- Blue gradient (#1E3A8A → #3B82F6)
+- White horse silhouette with flowing mane
 - AI golden crown/sparkle on top
 - Rounded square background
 
-### Why Fox?
-- Fox = Intelligence & Cleverness
+### Why Horse?
+- Horse = Power & Speed
+- Noble & elegant
 - Distinctive silhouette
-- Memorable & recognizable
 - Works well in small sizes
 
 ### Colors
-- Primary: #FF6B35 (Orange)
-- Secondary: #F7931E (Golden Orange)
-- Accent: #FFD700 (Gold)
-- Dark: #1a1a2e (Eye color)
-- White: #FFFFFF
+- Primary: #1E3A8A (Dark Blue)
+- Secondary: #3B82F6 (Blue)
+- Accent: #93C5FD (Light Blue)
+- Gold: #FFD700 (AI Crown)
 
 ### Variations
 - Full color (default)
