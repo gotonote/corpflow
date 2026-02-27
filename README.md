@@ -90,30 +90,45 @@ flutter build ios --release
 
 ## How to Use
 
-### 💬 Chat
+### 1. Open in Browser
 
-1. Tap **"New Chat"** button
-2. Type your message in the input field
-3. AI responds instantly
-4. Conversation is saved automatically
+After starting Docker, open: **http://localhost:3000**
 
-### 🔀 Flow
+---
 
-1. Go to **Flow** tab
-2. Tap **"+"** to create new flow
-3. Add nodes (Trigger/Agent/Tool/Condition)
-4. Connect nodes by dragging
-5. Save your flow
-6. Execute by tapping play button
+### 2. Configure AI Models
 
-### 🤖 Agents
+In **Settings**:
+- Click to select a model (GPT-4, GLM-4, Kimi, etc.)
+- Enter your API Key for that model
+- Save
 
-1. Go to **Agents** tab
-2. Tap **"+"** to create new agent
-3. Configure: name, model, system prompt, tools
-4. Save and use in flows or chat
+---
 
-### 🗳️ Multi-Model Voting
+### 3. Use Features
+
+| Feature | How to Use |
+|---------|-------------|
+| 💬 **Chat** | Select an agent, type message, get AI response |
+| 🔀 **Flow** | Create flow, drag nodes, connect them, execute |
+| 🤖 **Agents** | Create/manage AI agents with different models |
+| ⚙️ **Settings** | Configure models, API keys, voting, channels |
+
+---
+
+### 4. Connect Mobile App (Optional)
+
+To connect mobile app to local server:
+
+1. Ensure phone and computer are on the same WiFi
+2. Get your computer's IP:
+   - Windows: `ipconfig`
+   - Mac/Linux: `ifconfig`
+3. In mobile app Settings, enter: `http://YOUR_IP:8080`
+
+---
+
+### 5. Multi-Model Voting
 
 Enable in **Settings** → Multi-Model Voting
 
@@ -148,6 +163,16 @@ export FEISHU_APP_SECRET=xxx
 export WECHAT_APP_ID=xxx
 export TELEGRAM_BOT_TOKEN=xxx
 ```
+
+---
+
+## Troubleshooting
+
+| Problem | Solution |
+|---------|----------|
+| Can't access localhost:3000 | Check if Docker is running: `docker ps` |
+| API calls fail | Verify API Key is configured in Settings |
+| Mobile can't connect | Check firewall / ensure same network |
 
 ---
 
