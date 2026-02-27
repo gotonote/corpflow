@@ -43,9 +43,9 @@ func (s *Service) Process(ctx context.Context, input, userID string) (string, er
 
 // ProcessWithVoting 使用智能体投票处理
 func (s *Service) ProcessWithVoting(ctx context.Context, cfg Config, input string) (string, error) {
-	// 检查是否启用投票
-	if !cfg.AutoVote || len(cfg.VotingModels) == 0 {
-		// 未启用投票，使用默认模型
+	// 检查是否启用投票且配置了多个模型
+	if !cfg.AutoVote || len(cfg.VotingModels) < 2 {
+		// 未启用投票或只配置1个模型，直接使用默认模型
 		return s.callModel(ctx, cfg.Model, cfg.SystemPrompt, input)
 	}
 	
