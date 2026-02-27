@@ -15,7 +15,92 @@ body {
   flex-direction: column;
 }
 
-/* Header */
+/* Home Panel */
+.home-panel {
+  padding: 20px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.welcome-card {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 30px;
+  border-radius: 12px;
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.welcome-card h2 {
+  font-size: 1.8rem;
+  margin-bottom: 8px;
+}
+
+.welcome-card .subtitle {
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
+
+.demo-section, .features-section {
+  margin-bottom: 24px;
+}
+
+.demo-section h3, .features-section h3 {
+  font-size: 1.2rem;
+  margin-bottom: 16px;
+  color: #333;
+}
+
+.demo-card {
+  background: white;
+  padding: 16px;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.demo-card h4 {
+  font-size: 1rem;
+  margin-bottom: 12px;
+  color: #667eea;
+}
+
+.demo-content {
+  background: #f8f9fa;
+  padding: 12px;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.demo-content p {
+  margin-bottom: 4px;
+}
+
+.demo-desc {
+  color: #666;
+  font-size: 0.85rem;
+}
+
+.demo-winner {
+  color: #10b981;
+  font-weight: bold;
+  margin-top: 8px;
+}
+
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.feature-item {
+  background: white;
+  padding: 16px;
+  border-radius: 8px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
 .header {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
