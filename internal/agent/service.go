@@ -41,6 +41,31 @@ func (s *Service) Process(ctx context.Context, input, userID string) (string, er
 	return s.CallLLM(ctx, s.defaultModel, input)
 }
 
+// ProcessWithVoting 使用智能体投票处理
+func (s *Service) ProcessWithVoting(ctx context.Context, cfg Config, input string) (string, error) {
+	// 检查是否启用投票
+	if !cfg.AutoVote || len(cfg.VotingModels) == 0 {
+		// 未启用投票，使用默认模型
+		return s.callModel(ctx, cfg.Model, cfg.SystemPrompt, input)
+	}
+	
+	// 使用Model服务的投票功能
+	voteReq := model.VoteRequest{
+		Models:       cfg.VotingModels,
+		Messages:     []model.Message{{Role: "user", Content: input}},
+		SystemPrompt: cfg.SystemPrompt,
+		VotingMethod: cfg.VotingMethod,
+		TaskType:     "general",
+	}
+	
+	voteResp, err := s.modelService.Vote(ctx, voteReq)
+	if err != nil {
+		return "", err
+	}
+	
+	return voteResp.WinnerContent, nil
+}
+
 // ProcessWithAgent 使用指定智能体处理 (带记忆)
 func (s *Service) ProcessWithAgent(ctx context.Context, agentID, input, userID string) (string, error) {
 	// 获取智能体配置
@@ -191,12 +216,17 @@ type Config struct {
 	ID          string                 `json:"id"`
 	Name        string                 `json:"name"`
 	Description string                 `json:"description"`
-	Model       string                 `json:"model"`
-	Provider    string                 `json:"provider"` // openai/anthropic/custom
+	Model       string                 `json:"model"`        // 默认模型
+	Provider    string                 `json:"provider"`    // openai/anthropic/custom
 	SystemPrompt string                `json:"system_prompt"`
-	Tools       []string               `json:"tools"`    // 工具列表
+	Tools       []string               `json:"tools"`       // 工具列表
 	Temperature float64                `json:"temperature"`
 	MaxTokens   int                    `json:"max_tokens"`
+	
+	// 多模型投票配置
+	VotingModels  []string             `json:"voting_models"`  // 参与投票的模型列表
+	VotingMethod string                `json:"voting_method"`  // comprehensive/cross/length
+	AutoVote     bool                  `json:"auto_vote"`      // 是否启用自动投票
 }
 
 // Tool 工具定义
