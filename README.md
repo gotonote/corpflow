@@ -25,101 +25,100 @@ CorpFlow is a **multi-agent collaboration platform** that enables you to:
 
 ## Architecture
 
-```mermaid
-%%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#667EEA', 'edgeLabelBackground':'#ffffff', 'tertiaryColor': '#F3E8FF'}}}%%
-flowchart LR
-    subgraph INPUT["🔵 INPUT LAYER (Users)"]
-        direction TB
-        I1[📱 Mobile App]
-        I2[🌐 Web Frontend]
-        I3[💬 Channels]
-        I3 --> I1
-        I3 --> I2
-    end
-    
-    subgraph GATEWAY["🟡 GATEWAY LAYER"]
-        GW[⚡ API Gateway<br/>Go Gin Server]
-    end
-    
-    subgraph CORE["🟢 CORE SERVICES"]
-        direction TB
-        S1[🤖 Agent Service]
-        S2[🔀 Flow Engine]
-        S3[📡 Channel Service]
-        S4[🔧 Tools Service]
-        S5[📋 Logs Service]
-        S6[🧠 Memory Service]
-        S7[📊 Template Service]
-    end
-    
-    subgraph MODEL["🟣 MODEL LAYER (7+ Providers)"]
-        direction TB
-        M1("<span style='color:#10B981'>●</span> OpenAI GPT-4")
-        M2("<span style='color:#667EEA'>●</span> Zhipu GLM-4")
-        M3("<span style='color:#F59E0B'>●</span> Anthropic Claude")
-        M4("<span style='color:#EC4899'>●</span> Kimi Moonshot")
-        M5("<span style='color:#8B5CF6'>●</span> Qwen Alibaba")
-        M6("<span style='color:#EF4444'>●</span> DeepSeek")
-        M7("<span style='color:#14B8A6'>●</span> MiniMax")
-    end
-    
-    subgraph OUTPUT["🔴 OUTPUT LAYER"]
-        direction TB
-        O1[💬 Response]
-        O2[📊 Logs]
-        O3[📤 Export]
-    end
-    
-    subgraph DATA["⚫ DATA LAYER"]
-        direction TB
-        D1[🗄️ PostgreSQL]
-        D2[⚡ Redis Cache]
-        D3[📁 File Store]
-    end
-    
-    INPUT --> GW
-    GW --> CORE
-    CORE --> MODEL
-    CORE --> DATA
-    MODEL --> OUTPUT
-    
-    %% Styling with RGB colors
-    classDef input fill:#DBEAFE,stroke:#2563EB,stroke-width:3px,color:#1E40AF;
-    classDef gateway fill:#FEF9C3,stroke:#CA8A04,stroke-width:3px,color:#854D0E;
-    classDef core fill:#DCFCE7,stroke:#16A34A,stroke-width:3px,color:#166534;
-    classDef model fill:#F3E8FF,stroke:#9333EA,stroke-width:3px,color:#6B21A8;
-    classDef output fill:#FEE2E2,stroke:#DC2626,stroke-width:3px,color:#991B1B;
-    classDef data fill:#F1F5F9,stroke:#475569,stroke-width:3px,color:#1E293B;
-    
-    class I1,I2,I3,INPUT input;
-    class GW,GATEWAY gateway;
-    class S1,S2,S3,S4,S5,S6,S7,CORE core;
-    class M1,M2,M3,M4,M5,M6,M7,MODEL model;
-    class O1,O2,O3,OUTPUT output;
-    class D1,D2,D3,DATA data;
-```
-
-### Color Legend (RGB Theme)
-
-| Layer | Color | Hex | Description |
-|-------|-------|-----|-------------|
-| 🔵 **Input** | Blue | `#2563EB` | User interactions |
-| 🟡 **Gateway** | Yellow | `#CA8A04` | Request routing |
-| 🟢 **Core** | Green | `#16A34A` | Business logic |
-| 🟣 **Model** | Purple | `#9333EA` | AI providers |
-| 🔴 **Output** | Red | `#DC2626` | Responses/results |
-| ⚫ **Data** | Gray | `#475569` | Storage |
-
-### Data Flow
+### 🏗️ System Overview (Horizontal Layout for Web Display)
 
 ```
-User Input → API Gateway → Services → AI Models → Response
-     │              │            │           │
-     └──────────────┴────────────┴───────────┘
-                    │
-                    ▼
-              Data Layer
-              (Store & Cache)
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┐
+│ 🔵 INPUT LAYER                                                                                                           │
+│ ════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════ │
+│                                                                                                                            │
+│    📱 Mobile App (iOS/Android)          🌐 Web Frontend (React)           💬 Channels                                      │
+│    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━        ━━━━━━━━━━━━━━━━━━━━━━━━━       ━━━━━━━━━━━━━━━━━━━━━━━━━                   │
+│           │                                      │                                  │                                 │
+│           └──────────────────────────────────────┼──────────────────────────────────┘                                 │
+│                                                      │                                                                │
+└──────────────────────────────────────────────────────┼───────────────────────────────────────────────────────────────────┘
+                                                       │
+                                                       ▼
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┐
+│ 🟡 GATEWAY LAYER                                                                                                         │
+│ ════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════ │
+│                                                                                                                            │
+│                                    ⚡ API Gateway (Go Gin Server)                                                         │
+│                                    ───────────────────────────────────                                                    │
+│                                         Request Routing • Auth • Rate Limit                                              │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+                                                       │
+                                                       ▼
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┐
+│ 🟢 CORE SERVICES LAYER                                                                                                   │
+│ ════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════ │
+│                                                                                                                            │
+│   ┌────────────┐   ┌────────────┐   ┌────────────┐   ┌────────────┐   ┌────────────┐   ┌────────────┐   ┌───────────┐ │
+│   │     🤖      │   │     🔀      │   │     📡      │   │     🔧      │   │     📋      │   │     🧠      │   │    📊     │ │
+│   │   Agent    │   │    Flow    │   │  Channel   │   │   Tools    │   │   Logs     │   │  Memory    │   │ Template  │ │
+│   │  Service   │   │   Engine   │   │  Service   │   │  Service   │   │  Service   │   │  Service   │   │  Service  │ │
+│   └────────────┘   └────────────┘   └────────────┘   └────────────┘   └────────────┘   └────────────┘   └───────────┘ │
+│        │                │                │                │                │                │                 │             │
+│        └────────────────┴────────────────┴────────────────┴────────────────┴────────────────┴────────────────┘             │
+│                                                     │                                                                    │
+└─────────────────────────────────────────────────────┼────────────────────────────────────────────────────────────────────────┘
+                                                      │
+                              ┌────────────────────────┼────────────────────────┐
+                              ▼                        ▼                        ▼
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┐
+│ 🟣 MODEL LAYER (7+ AI Providers)                                                                                         │
+│ ════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════ │
+│                                                                                                                            │
+│   ┌──────────┐   ┌──────────┐   ┌──────────┐   ┌──────────┐   ┌──────────┐   ┌──────────┐   ┌──────────┐           │
+│   │   🔵     │   │   🟣     │   │   🟡     │   │   🟠     │   │   💜     │   │   🔴     │   │   🩵     │           │
+│   │ OpenAI   │   │  Zhipu   │   │Anthropic │   │   Kimi   │   │   Qwen   │   │DeepSeek  │   │ MiniMax  │           │
+│   │  GPT-4  │   │  GLM-4   │   │ Claude-3 │   │         │   │         │   │         │   │         │           │
+│   └──────────┘   └──────────┘   └──────────┘   └──────────┘   └──────────┘   └──────────┘   └──────────┘           │
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+                              │                        │                        │
+                              └────────────────────────┼────────────────────────┘
+                                                       │
+                                                       ▼
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┐
+│ 🔴 OUTPUT LAYER                                                                                                          │
+│ ════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════ │
+│                                                                                                                            │
+│                              💬 Response          📊 Logs          📤 Export                                             │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+                                                       │
+                                                       ▼
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┐
+│ ⚫ DATA LAYER                                                                                                            │
+│ ════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════ │
+│                                                                                                                            │
+│                            🗄️ PostgreSQL                    ⚡ Redis                    📁 File Store                     │
+│                         (Agents/Flows/Messages)        (Cache/Session)                    (Templates/Exports)             │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
+### 🎨 Color Legend
+
+| Layer | Color | Hex Code | Components |
+|-------|-------|----------|------------|
+| 🔵 Input | **Blue** | `#3B82F6` | Mobile, Web, Channels |
+| 🟡 Gateway | **Yellow** | `#F59E0B` | API Router, Auth |
+| 🟢 Core | **Green** | `#10B981` | Agent, Flow, Tools, Memory |
+| 🟣 Model | **Purple** | `#8B5CF6` | 7 AI Providers |
+| 🔴 Output | **Red** | `#EF4444` | Response, Logs, Export |
+| ⚫ Data | **Gray** | `#6B7280` | PostgreSQL, Redis, Files |
+
+### ↔️ Data Flow
+
+```
+User Input ──▶ API Gateway ──▶ Core Services ──▶ AI Models ──▶ Response
+                      │               │                    │
+                      │               └────────┬───────────┘
+                      │                        │
+                      └────────────────────────┘
+                                       │
+                                       ▼
+                                  Data Layer
 ```
 
 ---
