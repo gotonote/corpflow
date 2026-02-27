@@ -18,6 +18,7 @@ const (
 	ChannelTelegram ChannelType = "telegram"
 	ChannelDiscord  ChannelType = "discord"
 	ChannelWhatsApp ChannelType = "whatsapp"
+	ChannelWeChat   ChannelType = "wechat"
 	ChannelSignal   ChannelType = "signal"
 	ChannelWebAPI   ChannelType = "webapi"
 )
@@ -58,6 +59,7 @@ func NewManager(db *store.Postgres, redis *store.Redis) *Manager {
 	m.adapters[ChannelTelegram] = NewTelegramAdapter()
 	m.adapters[ChannelDiscord] = NewDiscordAdapter()
 	m.adapters[ChannelWhatsApp] = NewWhatsAppAdapter()
+	m.adapters[ChannelWeChat] = NewWeChatAdapter()
 
 	return m
 }
