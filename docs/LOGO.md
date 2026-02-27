@@ -24,10 +24,9 @@
 - Works well in small sizes
 
 ### Colors
-- Primary: #1E3A8A (Dark Blue)
-- Secondary: #3B82F6 (Blue)
-- Accent: #93C5FD (Light Blue)
-- Gold: #FFD700 (AI Crown)
+- Primary: #F59E0B (Amber)
+- Secondary: #D97706 (Dark Amber)
+- White: #FFFFFF
 
 ### Variations
 - Full color (default)
