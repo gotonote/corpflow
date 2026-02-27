@@ -287,8 +287,64 @@ func (s *Service) SetModel(modelName string, config *ModelConfig) {
 	s.models[modelName] = config
 }
 
-// Chat 调用单个模型
+// IsModelAvailable 检查模型是否可用 (API Key已配置)
+func (s *Service) IsModelAvailable(modelName string) bool {
+	cfg, ok := s.GetModel(modelName)
+	if !ok {
+		return false
+	}
+	return cfg.APIKey != ""
+}
+
+// GetAvailableModels 获取所有可用的模型
+func (s *Service) GetAvailableModels() []string {
+	s.mu.RLock()
+	defer s.mu.RUnlock()
+
+	var available []string
+	for name, cfg := range s.models {
+		if cfg.APIKey != "" {
+			available = append(available, name)
+		}
+	}
+	return available
+}
+
+// GetBestAvailableModel 获取最佳可用模型
+func (s *Service) GetBestAvailableModel(preferred string) string {
+	// 优先使用用户指定的模型
+	if preferred != "" && s.IsModelAvailable(preferred) {
+		return preferred
+	}
+
+	// 按优先级选择可用模型
+	priority := []string{"gpt-4", "glm-4", "glm-4-plus", "claude-3-opus", "moonshot-v1-8k-chat", "qwen-turbo", "deepseek-chat"}
+	for _, name := range priority {
+		if s.IsModelAvailable(name) {
+			return name
+		}
+	}
+
+	// 如果没有配置任何模型，返回第一个有client的
+	for name := range s.clients {
+		return string(name) // TODO: 返回对应的默认模型
+	}
+
+	return ""
+}
+
+// Chat 调用单个模型 (带自动回退)
 func (s *Service) Chat(ctx context.Context, modelName string, messages []Message) (*Response, error) {
+	// 检查模型是否可用
+	if !s.IsModelAvailable(modelName) {
+		// 尝试自动回退到可用模型
+		available := s.GetBestAvailableModel(modelName)
+		if available == "" {
+			return nil, fmt.Errorf("no available model: please configure at least one API key in Settings")
+		}
+		modelName = available
+	}
+
 	cfg, ok := s.GetModel(modelName)
 	if !ok {
 		return nil, fmt.Errorf("model not found: %s", modelName)
@@ -358,8 +414,36 @@ func (s *Service) Vote(ctx context.Context, req VoteRequest) (*VoteResponse, err
 		return nil, fmt.Errorf("no models specified")
 	}
 
-	// 1. 并发调用所有模型获取响应
+	// 过滤掉不可用的模型
+	var availableModels []string
+	for _, model := range req.Models {
+		if s.IsModelAvailable(model) {
+			availableModels = append(availableModels, model)
+		}
+	}
+
+	if len(availableModels) == 0 {
+		return nil, fmt.Errorf("no available models: please configure at least one API key")
+	}
+
+	// 更新请求中的模型列表
+	req.Models = availableModels
+
+	// 1. 并发调用所有可用模型获取响应
 	responses := s并发调用模型(ctx, req)
+
+	// 如果只有一个模型，直接返回
+	if len(responses) == 1 {
+		for model, resp := range responses {
+			return &VoteResponse{
+				Responses:     responses,
+				Winner:        model,
+				WinnerContent: resp,
+				Scores:        map[string]float64{model: 100},
+				Evaluation:    nil,
+			}, nil
+		}
+	}
 
 	// 2. 根据任务类型选择评估方法
 	var scores map[string]float64
@@ -402,11 +486,21 @@ func (s *Service) 并发调用模型(ctx context.Context, req VoteRequest) map[s
 	responses := make(map[string]string)
 	var mu sync.Mutex
 	var wg sync.WaitGroup
+	var failedCount int
 
 	for _, modelName := range req.Models {
 		wg.AddOne()
 		go func(model string) {
 			defer wg.Done()
+
+			// 检查模型是否可用
+			if !s.IsModelAvailable(model) {
+				mu.Lock()
+				responses[model] = "[Model not available: API key not configured]"
+				failedCount++
+				mu.Unlock()
+				return
+			}
 
 			msgs := make([]Message, 0, len(req.Messages)+1)
 			if req.SystemPrompt != "" {
@@ -416,16 +510,23 @@ func (s *Service) 并发调用模型(ctx context.Context, req VoteRequest) map[s
 
 			resp, err := s.Chat(ctx, model, msgs)
 			mu.Lock()
+			defer mu.Unlock()
 			if err != nil {
-				responses[model] = fmt.Sprintf("Error: %v", err)
+				responses[model] = fmt.Sprintf("[Error: %v]", err)
+				failedCount++
 			} else {
 				responses[model] = resp.Content
 			}
-			mu.Unlock()
 		}(modelName)
 	}
 
 	wg.Wait()
+
+	// 如果全部失败，返回错误提示
+	if failedCount == len(req.Models) {
+		responses["_error"] = "All models failed - please check API keys configuration"
+	}
+
 	return responses
 }
 
