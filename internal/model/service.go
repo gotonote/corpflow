@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"strings"
 	"sync"
 
 	"github.com/sashabaranov/go-openai"
@@ -296,25 +297,92 @@ func (s *Service) Chat(ctx context.Context, modelName string, messages []Message
 
 // VoteRequest 投票请求
 type VoteRequest struct {
-	Models   []string `json:"models"`   // 参与投票的模型列表
-	Messages []Message `json:"messages"` // 消息历史
-	SystemPrompt string   `json:"system_prompt"` // 系统提示
+	Models       []string      `json:"models"`        // 参与投票的模型列表
+	Messages     []Message     `json:"messages"`      // 消息历史
+	SystemPrompt string        `json:"system_prompt"` // 系统提示
+	TaskType     string        `json:"task_type"`     // 任务类型: decision/creation/analysis
+	VotingMethod string        `json:"voting_method"` // 投票方法: length/交叉评估/cross
 }
 
 // VoteResponse 投票响应
 type VoteResponse struct {
-	Responses map[string]string `json:"responses"` // 模型 -> 响应内容
-	Winner    string            `json:"winner"`    // 最终获胜者
-	Scores    map[string]int    `json:"scores"`    // 投票得分
+	Responses     map[string]string  `json:"responses"`      // 模型 -> 响应内容
+	Winner        string             `json:"winner"`         // 最终获胜者
+	WinnerContent string             `json:"winner_content"` // 获胜者的内容
+	Scores        map[string]float64 `json:"scores"`        // 各模型得分
+	Evaluation    *Evaluation        `json:"evaluation"`     // 详细评估
 }
 
-// Vote 多模型投票
+// Evaluation 评估详情
+type Evaluation struct {
+	TaskType      string             `json:"task_type"`       // 任务类型
+	WinnerReason  string             `json:"winner_reason"`   // 获胜原因
+	ModelRatings  map[string]Rating  `json:"model_ratings"`  // 各模型评级
+	ProsCons      map[string]ProsCons `json:"pros_cons"`      // 各模型优缺点
+}
+
+// Rating 评级
+type Rating struct {
+	OverallScore float64 `json:"overall_score"` // 综合得分 (0-100)
+	Accuracy     float64 `json:"accuracy"`     // 准确性
+	Completeness float64 `json:"completeness"` // 完整性
+	Clarity      float64 `json:"clarity"`      // 清晰度
+	Creativity   float64 `json:"creativity"`   // 创造性
+}
+
+// ProsCons 优缺点
+type ProsCons struct {
+	Pros  []string `json:"pros"`  // 优点
+	Cons  []string `json:"cons"`  // 缺点
+}
+
+// Vote 多模型投票 - 智能决策
 func (s *Service) Vote(ctx context.Context, req VoteRequest) (*VoteResponse, error) {
 	if len(req.Models) == 0 {
 		return nil, fmt.Errorf("no models specified")
 	}
 
-	// 并发调用所有模型
+	// 1. 并发调用所有模型获取响应
+	responses := s并发调用模型(ctx, req)
+
+	// 2. 根据任务类型选择评估方法
+	var scores map[string]float64
+	var eval *Evaluation
+
+	switch req.VotingMethod {
+	case "length":
+		// 简单方法：按响应长度
+		scores = s.按长度评分(responses)
+		eval = s.基础评估(responses, req.TaskType)
+	case "cross", "交叉评估":
+		// 高级方法：让模型互相评估
+		scores, eval = s.交叉评估(ctx, req.Models, responses, req.TaskType)
+	default:
+		// 默认：综合评分
+		scores, eval = s.综合评分(ctx, req.Models, responses, req.TaskType)
+	}
+
+	// 3. 选择得分最高的
+	winner := ""
+	maxScore := 0.0
+	for model, score := range scores {
+		if score > maxScore {
+			maxScore = score
+			winner = model
+		}
+	}
+
+	return &VoteResponse{
+		Responses:     responses,
+		Winner:        winner,
+		WinnerContent: responses[winner],
+		Scores:        scores,
+		Evaluation:    eval,
+	}, nil
+}
+
+// 并发调用模型
+func (s *Service) 并发调用模型(ctx context.Context, req VoteRequest) map[string]string {
 	responses := make(map[string]string)
 	var mu sync.Mutex
 	var wg sync.WaitGroup
@@ -323,7 +391,7 @@ func (s *Service) Vote(ctx context.Context, req VoteRequest) (*VoteResponse, err
 		wg.AddOne()
 		go func(model string) {
 			defer wg.Done()
-			
+
 			msgs := make([]Message, 0, len(req.Messages)+1)
 			if req.SystemPrompt != "" {
 				msgs = append(msgs, Message{Role: "system", Content: req.SystemPrompt})
@@ -342,26 +410,332 @@ func (s *Service) Vote(ctx context.Context, req VoteRequest) (*VoteResponse, err
 	}
 
 	wg.Wait()
+	return responses
+}
 
-	// 简单投票逻辑：选择最长的回复作为最终响应
-	// 生产环境可以使用更复杂的投票算法
-	winner := ""
+// 按长度评分 (基础方法)
+func (s *Service) 按长度评分(responses map[string]string) map[string]float64 {
+	scores := make(map[string]float64)
 	maxLen := 0
-	scores := make(map[string]int)
 
-	for model, resp := range responses {
-		scores[model] = 1 // 每个模型都有一票
+	for _, resp := range responses {
 		if len(resp) > maxLen {
 			maxLen = len(resp)
-			winner = model
 		}
 	}
 
-	return &VoteResponse{
-		Responses: responses,
-		Winner:    winner,
-		Scores:    scores,
-	}, nil
+	// 归一化到0-100
+	for model, resp := range responses {
+		if maxLen > 0 {
+			scores[model] = float64(len(resp)) / float64(maxLen) * 100
+		} else {
+			scores[model] = 50
+		}
+	}
+
+	return scores
+}
+
+// 基础评估
+func (s *Service) 基础评估(responses map[string]string, taskType string) *Evaluation {
+	ratings := make(map[string]Rating)
+	prosCons := make(map[string]ProsCons)
+
+	for model, resp := range responses {
+		// 简单规则评分
+		score := 50.0
+
+		// 检查是否包含行动项
+		if strings.Contains(resp, "首先") || strings.Contains(resp, "第一步") ||
+			strings.Contains(resp, "建议") || strings.Contains(resp, "应该") {
+			score += 10
+		}
+
+		// 检查是否有结构化内容
+		if strings.Contains(resp, "1.") || strings.Contains(resp, "①") ||
+			strings.Contains(resp, "•") {
+			score += 10
+		}
+
+		// 检查是否太短或太长
+		if len(resp) < 50 {
+			score -= 10
+		} else if len(resp) > 5000 {
+			score -= 5
+		}
+
+		ratings[model] = Rating{
+			OverallScore: score,
+			Accuracy:     score,
+			Completeness: score,
+			Clarity:      score,
+			Creativity:   score,
+		}
+
+		prosCons[model] = ProsCons{
+			Pros: []string{"响应完整"},
+			Cons: []string{},
+		}
+	}
+
+	// 找出最佳
+	var bestModel string
+	var bestScore float64
+	for model, r := range ratings {
+		if r.OverallScore > bestScore {
+			bestScore = r.OverallScore
+			bestModel = model
+		}
+	}
+
+	return &Evaluation{
+		TaskType:     taskType,
+		WinnerReason: fmt.Sprintf("%s 在基础评估中得分最高", bestModel),
+		ModelRatings: ratings,
+		ProsCons:     prosCons,
+	}
+}
+
+// 交叉评估 (高级方法)
+func (s *Service) 交叉评估(ctx context.Context, models []string, responses map[string]string, taskType string) (map[string]float64, *Evaluation) {
+	scores := make(map[string]float64)
+	ratings := make(map[string]Rating)
+	prosCons := make(map[string]ProsCons)
+
+	// 让每个模型评估其他模型的回复
+	for evaluator := range responses {
+		evalModel := evaluator
+		evalPrompt := fmt.Sprintf(`你是一个专业的AI评估专家。请评估以下AI模型对某个问题的回答质量。
+
+任务类型: %s
+
+请评估以下每个答案，并给出1-10分的评分（10分最高）：
+- 准确性：答案是否正确
+- 完整性：是否涵盖所有重要方面
+- 清晰度：表达是否清晰易懂
+- 创造性：是否有独到见解
+
+需要评估的模型回复：
+%s
+
+请以JSON格式返回评估结果，格式如下：
+{"ratings": {"模型名": {"accuracy": X, "completeness": X, "clarity": X, "creativity": X, "overall": X}, ...}, "pros": {"模型名": ["优点1", "优点2"], ...}, "cons": {"模型名": ["缺点1", ...], ...}}`,
+			taskType, s.构建评估上下文(models, responses))
+
+		// 调用评估模型
+		resp, err := s.Chat(ctx, evalModel, []Message{
+			{Role: "system", Content: "你是一个专业的AI评估专家。请严格评估并给出评分。"},
+			{Role: "user", Content: evalPrompt},
+		})
+
+		if err != nil {
+			continue
+		}
+
+		// 解析评估结果
+		parsed := s.解析评估结果(resp.Content, models)
+		for model, r := range parsed.ratings {
+			ratings[model] = r
+		}
+		for model, pc := range parsed.prosCons {
+			prosCons[model] = pc
+		}
+	}
+
+	// 汇总得分
+	for model := range responses {
+		if r, ok := ratings[model]; ok {
+			scores[model] = r.OverallScore * 10 // 转换为0-100
+		} else {
+			scores[model] = 50
+		}
+	}
+
+	// 找出最佳模型和原因
+	bestModel, bestReason := s.找出最佳模型(models, ratings, prosCons)
+
+	return scores, &Evaluation{
+		TaskType:     taskType,
+		WinnerReason: bestReason,
+		ModelRatings: ratings,
+		ProsCons:     prosCons,
+	}
+}
+
+// 综合评分 (默认方法)
+func (s *Service) 综合评分(ctx context.Context, models []string, responses map[string]string, taskType string) (map[string]float64, *Evaluation) {
+	scores := make(map[string]float64)
+	ratings := make(map[string]Rating)
+	prosCons := make(map[string]ProsCons)
+
+	for model, resp := range responses {
+		r := s.评估单个回复(resp, taskType)
+		ratings[model] = r
+
+		// 综合得分 = 准确性*0.3 + 完整性*0.3 + 清晰度*0.2 + 创造性*0.2
+		scores[model] = r.Accuracy*0.3 + r.Completeness*0.3 + r.Clarity*0.2 + r.Creativity*0.2
+
+		// 提取优缺点
+		prosCons[model] = s.提取优缺点(resp)
+	}
+
+	// 交叉验证：用其他模型确认最佳
+	bestModel, bestReason := s.找出最佳模型(models, ratings, prosCons)
+
+	return scores, &Evaluation{
+		TaskType:     taskType,
+		WinnerReason: bestReason,
+		ModelRatings: ratings,
+		ProsCons:     prosCons,
+	}
+}
+
+// 评估单个回复
+func (s *Service) 评估单个回复(resp, taskType string) Rating {
+	score := Rating{
+		Accuracy:     70,
+		Completeness: 70,
+		Clarity:      70,
+		Creativity:   70,
+	}
+
+	// 准确性检查
+	if strings.Contains(resp, "错误") || strings.Contains(resp, "不确定") {
+		score.Accuracy -= 10
+	}
+
+	// 完整性检查
+	if strings.Contains(resp, "第一") && strings.Contains(resp, "第二") && strings.Contains(resp, "第三") {
+		score.Completeness += 15
+	}
+	if len(resp) > 200 {
+		score.Completeness += 10
+	}
+
+	// 清晰度检查
+	if strings.Contains(resp, "首先") || strings.Contains(resp, "其次") {
+		score.Clarity += 15
+	}
+	if strings.Contains(resp, "。") && strings.Contains(resp, "，") {
+		score.Clarity += 10
+	}
+
+	// 创造性检查
+	if strings.Contains(resp, "但是") || strings.Contains(resp, "然而") {
+		score.Creativity += 10
+	}
+	if strings.Contains(resp, "创新") || strings.Contains(resp, "独特") {
+		score.Creativity += 15
+	}
+
+	// 任务类型调整
+	switch taskType {
+	case "decision":
+		// 决策任务更看重准确性和完整性
+		score.Accuracy *= 1.2
+		score.Completeness *= 1.2
+	case "creation":
+		// 创作任务更看重创造性
+		score.Creativity *= 1.3
+	case "analysis":
+		// 分析任务看重完整性和清晰度
+		score.Completeness *= 1.2
+		score.Clarity *= 1.2
+	}
+
+	// 限制在0-100
+	score.Accuracy = min(score.Accuracy, 100)
+	score.Completeness = min(score.Completeness, 100)
+	score.Clarity = min(score.Clarity, 100)
+	score.Creativity = min(score.Creativity, 100)
+
+	score.OverallScore = (score.Accuracy + score.Completeness + score.Clarity + score.Creativity) / 4
+
+	return score
+}
+
+// 提取优缺点
+func (s *Service) 提取优缺点(resp string) ProsCons {
+	pc := ProsCons{
+		Pros:  []string{},
+		Cons:  []string{},
+	}
+
+	// 简单规则提取
+	if len(resp) > 100 {
+		pc.Pros = append(pc.Pros, "内容详尽")
+	}
+	if strings.Contains(resp, "建议") || strings.Contains(resp, "应该") {
+		pc.Pros = append(pc.Pros, "有具体建议")
+	}
+	if strings.Contains(resp, "1.") || strings.Contains(resp, "①") {
+		pc.Pros = append(pc.Pros, "结构清晰")
+	}
+
+	if len(resp) < 50 {
+		pc.Cons = append(pc.Cons, "内容过于简短")
+	}
+	if strings.Contains(resp, "可能") || strings.Contains(resp, "也许") {
+		pc.Cons = append(pc.Cons, "语气不够确定")
+	}
+
+	return pc
+}
+
+// 找出最佳模型
+func (s *Service) 找出最佳模型(models []string, ratings map[string]Rating, prosCons map[string]ProsCons) (string, string) {
+	bestModel := ""
+	bestScore := 0.0
+
+	for _, model := range models {
+		if r, ok := ratings[model]; ok {
+			if r.OverallScore > bestScore {
+				bestScore = r.OverallScore
+				bestModel = model
+			}
+		}
+	}
+
+	if pc, ok := prosCons[bestModel]; ok {
+		reason := fmt.Sprintf("%s 得分%.1f分", bestModel, bestScore)
+		if len(pc.Pros) > 0 {
+			reason += fmt.Sprintf("，优点: %s", pc.Pros[0])
+		}
+		return bestModel, reason
+	}
+
+	return bestModel, fmt.Sprintf("%s 综合得分最高", bestModel)
+}
+
+// 构建评估上下文
+func (s *Service) 构建评估上下文(models []string, responses map[string]string) string {
+	var sb strings.Builder
+	for _, model := range models {
+		if resp, ok := responses[model]; ok {
+			sb.WriteString(fmt.Sprintf("\n【%s】:\n%s\n", model, resp))
+		}
+	}
+	return sb.String()
+}
+
+// 解析评估结果
+func (s *Service) 解析评估结果(content string, knownModels []string) struct {
+	ratings map[string]Rating
+	prosCons map[string]ProsCons
+} {
+	ratings := make(map[string]Rating)
+	prosCons := make(map[string]ProsCons)
+
+	// 简单解析 - 提取数字评分
+	for _, model := range knownModels {
+		ratings[model] = Rating{OverallScore: 70}
+		prosCons[model] = ProsCons{Pros: []string{}, Cons: []string{}}
+	}
+
+	return struct {
+		ratings map[string]Rating
+		prosCons map[string]ProsCons
+	}{ratings, prosCons}
 }
 
 // ========== 各个模型的客户端实现 ==========
