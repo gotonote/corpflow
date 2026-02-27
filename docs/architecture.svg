@@ -1,111 +1,108 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 700">
-  <!-- Background -->
-  <rect width="900" height="700" fill="#f8fafc"/>
-  
-  <!-- Input Layer - Blue -->
-  <rect x="50" y="20" width="800" height="60" rx="8" fill="#DBEAFE" stroke="#2563EB" stroke-width="2"/>
-  <text x="70" y="45" font-size="14" fill="#1E40AF" font-weight="bold">🔵 INPUT LAYER</text>
-  <text x="450" y="55" font-size="12" fill="#3B82F6">📱 Mobile (iOS/Android)  🌐 Web (React)  💬 Channels (Feishu/WeChat/Telegram/Discord)</text>
-  
-  <!-- Arrow -->
-  <path d="M450 80 L450 100" stroke="#64748B" stroke-width="2" marker-end="url(#arrow)"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 720">
   <defs>
     <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
       <path d="M0,0 L0,6 L9,3 z" fill="#64748B"/>
     </marker>
   </defs>
+  <rect width="900" height="720" fill="#f8fafc"/>
   
-  <!-- Gateway Layer - Yellow -->
-  <rect x="50" y="110" width="800" height="50" rx="8" fill="#FEF9C3" stroke="#CA8A04" stroke-width="2"/>
-  <text x="70" y="145" font-size="14" fill="#854D0E" font-weight="bold">🟡 GATEWAY LAYER</text>
-  <text x="450" y="145" font-size="12" fill="#F59E0B">⚡ API Gateway (Go Gin / Routing / Auth)</text>
+  <!-- Title -->
+  <text x="450" y="25" font-size="18" fill="#1e293b" font-weight="bold" text-anchor="middle">CorpFlow Architecture</text>
   
-  <!-- Arrow -->
-  <path d="M450 160 L450 180" stroke="#64748B" stroke-width="2" marker-end="url(#arrow)"/>
+  <!-- Input Layer -->
+  <rect x="50" y="40" width="800" height="55" rx="8" fill="#DBEAFE" stroke="#2563EB" stroke-width="2"/>
+  <text x="450" y="62" font-size="14" fill="#1E40AF" font-weight="bold" text-anchor="middle">🔵 INPUT LAYER</text>
+  <text x="450" y="82" font-size="11" fill="#3B82F6" text-anchor="middle">📱 Mobile (iOS/Android) &nbsp; 🌐 Web (React) &nbsp; 💬 Channels (Feishu/WeChat/Telegram/Discord)</text>
   
-  <!-- Core Services Layer - Green -->
+  <path d="M450,95 L450,110" stroke="#64748B" stroke-width="2" marker-end="url(#arrow)"/>
+  
+  <!-- Gateway Layer -->
+  <rect x="50" y="120" width="800" height="45" rx="8" fill="#FEF9C3" stroke="#CA8A04" stroke-width="2"/>
+  <text x="450" y="145" font-size="14" fill="#854D0E" font-weight="bold" text-anchor="middle">🟡 GATEWAY LAYER</text>
+  <text x="450" y="160" font-size="11" fill="#F59E0B" text-anchor="middle">⚡ API Gateway (Go Gin / Routing / Auth)</text>
+  
+  <path d="M450,165 L450,180" stroke="#64748B" stroke-width="2" marker-end="url(#arrow)"/>
+  
+  <!-- Core Services Layer -->
   <rect x="50" y="190" width="800" height="130" rx="8" fill="#DCFCE7" stroke="#16A34A" stroke-width="2"/>
-  <text x="70" y="215" font-size="14" fill="#166534" font-weight="bold">🟢 CORE SERVICES LAYER</text>
+  <text x="450" y="215" font-size="14" fill="#166534" font-weight="bold" text-anchor="middle">🟢 CORE SERVICES LAYER</text>
   
-  <!-- Service Boxes -->
-  <rect x="100" y="235" width="80" height="65" rx="6" fill="#86EFAC" stroke="#22C55E" stroke-width="1"/>
-  <text x="140" y="265" font-size="24">🤖</text>
-  <text x="140" y="290" font-size="9" fill="#166534">Agent</text>
+  <!-- Service Boxes - 7 boxes, wider -->
+  <rect x="75" y="235" width="100" height="70" rx="6" fill="#86EFAC" stroke="#22C55E" stroke-width="1"/>
+  <text x="125" y="275" font-size="22" text-anchor="middle">🤖</text>
+  <text x="125" y="293" font-size="10" fill="#166534" text-anchor="middle">Agent</text>
   
-  <rect x="200" y="235" width="80" height="65" rx="6" fill="#86EFAC" stroke="#22C55E" stroke-width="1"/>
-  <text x="240" y="265" font-size="24">🔀</text>
-  <text x="235" y="290" font-size="9" fill="#166534">Flow</text>
+  <rect x="190" y="235" width="100" height="70" rx="6" fill="#86EFAC" stroke="#22C55E" stroke-width="1"/>
+  <text x="240" y="275" font-size="22" text-anchor="middle">🔀</text>
+  <text x="240" y="293" font-size="10" fill="#166534" text-anchor="middle">Flow</text>
   
-  <rect x="300" y="235" width="80" height="65" rx="6" fill="#86EFAC" stroke="#22C55E" stroke-width="1"/>
-  <text x="340" y="265" font-size="24">📡</text>
-  <text x="335" y="290" font-size="9" fill="#166534">Channel</text>
+  <rect x="305" y="235" width="100" height="70" rx="6" fill="#86EFAC" stroke="#22C55E" stroke-width="1"/>
+  <text x="355" y="275" font-size="22" text-anchor="middle">📡</text>
+  <text x="355" y="293" font-size="10" fill="#166534" text-anchor="middle">Channel</text>
   
-  <rect x="400" y="235" width="80" height="65" rx="6" fill="#86EFAC" stroke="#22C55E" stroke-width="1"/>
-  <text x="440" y="265" font-size="24">🔧</text>
-  <text x="435" y="290" font-size="9" fill="#166534">Tools</text>
+  <rect x="420" y="235" width="100" height="70" rx="6" fill="#86EFAC" stroke="#22C55E" stroke-width="1"/>
+  <text x="470" y="275" font-size="22" text-anchor="middle">🔧</text>
+  <text x="470" y="293" font-size="10" fill="#166534" text-anchor="middle">Tools</text>
   
-  <rect x="500" y="235" width="80" height="65" rx="6" fill="#86EFAC" stroke="#22C55E" stroke-width="1"/>
-  <text x="540" y="265" font-size="24">📋</text>
-  <text x="535" y="290" font-size="9" fill="#166534">Logs</text>
+  <rect x="535" y="235" width="100" height="70" rx="6" fill="#86EFAC" stroke="#22C55E" stroke-width="1"/>
+  <text x="585" y="275" font-size="22" text-anchor="middle">📋</text>
+  <text x="585" y="293" font-size="10" fill="#166534" text-anchor="middle">Logs</text>
   
-  <rect x="600" y="235" width="80" height="65" rx="6" fill="#86EFAC" stroke="#22C55E" stroke-width="1"/>
-  <text x="640" y="265" font-size="24">🧠</text>
-  <text x="635" y="290" font-size="9" fill="#166534">Memory</text>
+  <rect x="650" y="235" width="100" height="70" rx="6" fill="#86EFAC" stroke="#22C55E" stroke-width="1"/>
+  <text x="700" y="275" font-size="22" text-anchor="middle">🧠</text>
+  <text x="700" y="293" font-size="10" fill="#166534" text-anchor="middle">Memory</text>
   
-  <rect x="700" y="235" width="80" height="65" rx="6" fill="#86EFAC" stroke="#22C55E" stroke-width="1"/>
-  <text x="740" y="265" font-size="24">📊</text>
-  <text x="730" y="290" font-size="9" fill="#166534">Template</text>
+  <rect x="765" y="235" width="60" height="70" rx="6" fill="#86EFAC" stroke="#22C55E" stroke-width="1"/>
+  <text x="795" y="275" font-size="18" text-anchor="middle">📊</text>
+  <text x="795" y="293" font-size="9" fill="#166534" text-anchor="middle">Tmpl</text>
   
-  <!-- Arrow -->
-  <path d="M450 320 L450 340 L250 360 L250 380" stroke="#64748B" stroke-width="2" fill="none"/>
-  <path d="M450 320 L450 340 L650 360 L650 380" stroke="#64748B" stroke-width="2" fill="none"/>
+  <path d="M450,320 L450,340 L250,360 L250,380" stroke="#64748B" stroke-width="2" fill="none"/>
+  <path d="M450,320 L450,340 L650,360 L650,380" stroke="#64748B" stroke-width="2" fill="none"/>
   
-  <!-- Model Layer - Purple -->
-  <rect x="50" y="390" width="800" height="110" rx="8" fill="#F3E8FF" stroke="#9333EA" stroke-width="2"/>
-  <text x="70" y="415" font-size="14" fill="#6B21A8" font-weight="bold">🟣 MODEL LAYER (7+ AI Providers)</text>
+  <!-- Model Layer -->
+  <rect x="50" y="390" width="800" height="115" rx="8" fill="#F3E8FF" stroke="#9333EA" stroke-width="2"/>
+  <text x="450" y="415" font-size="14" fill="#6B21A8" font-weight="bold" text-anchor="middle">🟣 MODEL LAYER (7+ AI Providers)</text>
   
-  <!-- Model Boxes -->
-  <rect x="100" y="435" width="85" height="50" rx="6" fill="#DBEAFE" stroke="#3B82F6" stroke-width="1"/>
-  <text x="142" y="460" font-size="10" fill="#1E40AF" font-weight="bold">🔵</text>
-  <text x="142" y="475" font-size="9" fill="#3B82F6">OpenAI</text>
+  <!-- Model Boxes - 7 boxes -->
+  <rect x="65" y="435" width="105" height="55" rx="6" fill="#DBEAFE" stroke="#3B82F6" stroke-width="1"/>
+  <text x="117" y="465" font-size="9" fill="#1E40AF" font-weight="bold" text-anchor="middle">🔵 OpenAI</text>
+  <text x="117" y="480" font-size="8" fill="#3B82F6" text-anchor="middle">GPT-4</text>
   
-  <rect x="205" y="435" width="85" height="50" rx="6" fill="#EDE9FE" stroke="#8B5CF6" stroke-width="1"/>
-  <text x="247" y="460" font-size="10" fill="#6B21A8" font-weight="bold">🟣</text>
-  <text x="240" y="475" font-size="9" fill="#8B5CF6">Zhipu</text>
+  <rect x="185" y="435" width="105" height="55" rx="6" fill="#EDE9FE" stroke="#8B5CF6" stroke-width="1"/>
+  <text x="237" y="465" font-size="9" fill="#6B21A8" font-weight="bold" text-anchor="middle">🟣 Zhipu</text>
+  <text x="237" y="480" font-size="8" fill="#8B5CF6" text-anchor="middle">GLM-4</text>
   
-  <rect x="310" y="435" width="85" height="50" rx="6" fill="#FEF3C7" stroke="#F59E0B" stroke-width="1"/>
-  <text x="352" y="460" font-size="10" fill="#92400E" font-weight="bold">🟡</text>
-  <text x="342" y="475" font-size="9" fill="#F59E0B">Anthropic</text>
+  <rect x="305" y="435" width="105" height="55" rx="6" fill="#FEF3C7" stroke="#F59E0B" stroke-width="1"/>
+  <text x="357" y="465" font-size="9" fill="#92400E" font-weight="bold" text-anchor="middle">🟡 Anthropic</text>
+  <text x="357" y="480" font-size="8" fill="#F59E0B" text-anchor="middle">Claude-3</text>
   
-  <rect x="415" y="435" width="85" height="50" rx="6" fill="#FCE7F3" stroke="#EC4899" stroke-width="1"/>
-  <text x="457" y="460" font-size="10" fill="#9D174D" font-weight="bold">🟠</text>
-  <text x="455" y="475" font-size="9" fill="#EC4899">Kimi</text>
+  <rect x="425" y="435" width="105" height="55" rx="6" fill="#FCE7F3" stroke="#EC4899" stroke-width="1"/>
+  <text x="477" y="465" font-size="9" fill="#9D174D" font-weight="bold" text-anchor="middle">🟠 Kimi</text>
+  <text x="477" y="480" font-size="8" fill="#EC4899" text-anchor="middle">Moonshot</text>
   
-  <rect x="520" y="435" width="85" height="50" rx="6" fill="#EDE9FE" stroke="#8B5CF6" stroke-width="1"/>
-  <text x="562" y="460" font-size="10" fill="#6B21A8" font-weight="bold">💜</text>
-  <text x="555" y="475" font-size="9" fill="#8B5CF6">Qwen</text>
+  <rect x="545" y="435" width="105" height="55" rx="6" fill="#EDE9FE" stroke="#8B5CF6" stroke-width="1"/>
+  <text x="597" y="465" font-size="9" fill="#6B21A8" font-weight="bold" text-anchor="middle">💜 Qwen</text>
+  <text x="597" y="480" font-size="8" fill="#8B5CF6" text-anchor="middle">Alibaba</text>
   
-  <rect x="625" y="435" width="85" height="50" rx="6" fill="#FEE2E2" stroke="#EF4444" stroke-width="1"/>
-  <text x="667" y="460" font-size="10" fill="#991B1B" font-weight="bold">🔴</text>
-  <text x="660" y="475" font-size="9" fill="#EF4444">DeepSeek</text>
+  <rect x="665" y="435" width="105" height="55" rx="6" fill="#FEE2E2" stroke="#EF4444" stroke-width="1"/>
+  <text x="717" y="465" font-size="9" fill="#991B1B" font-weight="bold" text-anchor="middle">🔴 DeepSeek</text>
+  <text x="717" y="480" font-size="8" fill="#EF4444" text-anchor="middle">DeepSeek</text>
   
-  <rect x="730" y="435" width="85" height="50" rx="6" fill="#CCFBF1" stroke="#14B8A6" stroke-width="1"/>
-  <text x="772" y="460" font-size="10" fill="#0F766E" font-weight="bold">🩵</text>
-  <text x="765" y="475" font-size="9" fill="#14B8A6">MiniMax</text>
+  <rect x="785" y="435" width="50" height="55" rx="6" fill="#CCFBF1" stroke="#14B8A6" stroke-width="1"/>
+  <text x="810" y="465" font-size="8" fill="#0F766E" font-weight="bold" text-anchor="middle">🩵</text>
+  <text x="810" y="480" font-size="7" fill="#14B8A6" text-anchor="middle">Mini</text>
   
-  <!-- Arrow -->
-  <path d="M450 500 L450 520" stroke="#64748B" stroke-width="2" marker-end="url(#arrow)"/>
+  <path d="M450,505 L450,525" stroke="#64748B" stroke-width="2" marker-end="url(#arrow)"/>
   
-  <!-- Output Layer - Red -->
-  <rect x="50" y="530" width="800" height="50" rx="8" fill="#FEE2E2" stroke="#DC2626" stroke-width="2"/>
-  <text x="70" y="565" font-size="14" fill="#991B1B" font-weight="bold">🔴 OUTPUT LAYER</text>
-  <text x="450" y="560" font-size="12" fill="#EF4444">💬 Response  📊 Logs  📤 Export</text>
+  <!-- Output Layer -->
+  <rect x="50" y="535" width="800" height="45" rx="8" fill="#FEE2E2" stroke="#DC2626" stroke-width="2"/>
+  <text x="450" y="560" font-size="14" fill="#991B1B" font-weight="bold" text-anchor="middle">🔴 OUTPUT LAYER</text>
+  <text x="450" y="575" font-size="11" fill="#EF4444" text-anchor="middle">💬 Response &nbsp; 📊 Logs &nbsp; 📤 Export</text>
   
-  <!-- Arrow -->
-  <path d="M450 580 L450 600" stroke="#64748B" stroke-width="2" marker-end="url(#arrow)"/>
+  <path d="M450,580 L450,595" stroke="#64748B" stroke-width="2" marker-end="url(#arrow)"/>
   
-  <!-- Data Layer - Gray -->
-  <rect x="50" y="610" width="800" height="60" rx="8" fill="#F1F5F9" stroke="#475569" stroke-width="2"/>
-  <text x="70" y="645" font-size="14" fill="#1E293B" font-weight="bold">⚫ DATA LAYER</text>
-  <text x="450" y="650" font-size="12" fill="#6B7280">🗄️ PostgreSQL (Agents/Flows/Messages)  ⚡ Redis (Cache/Session)  📁 File Store (Templates/Exports)</text>
+  <!-- Data Layer -->
+  <rect x="50" y="605" width="800" height="65" rx="8" fill="#F1F5F9" stroke="#475569" stroke-width="2"/>
+  <text x="450" y="630" font-size="14" fill="#1E293B" font-weight="bold" text-anchor="middle">⚫ DATA LAYER</text>
+  <text x="450" y="652" font-size="10" fill="#6B7280" text-anchor="middle">🗄️ PostgreSQL (Agents/Flows/Messages) &nbsp; ⚡ Redis (Cache/Session) &nbsp; 📁 File Store (Templates/Exports)</text>
 </svg>
