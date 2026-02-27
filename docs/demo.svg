@@ -50,7 +50,7 @@
   
   <!-- Step 3: Add Tools -->
   <rect x="50" y="430" width="800" height="100" rx="10" fill="#FEF3C7" stroke="#F59E0B" stroke-width="2"/>
-  <text x="70" y="460" font-size="16" fill="#92400E" font-weight="bold">🟡 Step 3: Add Tools & Capabilities</text>
+  <text x="70" y="460" font-size="16" fill="#92400E" font-weight="bold">🟡 Step 3: Add Tools and Capabilities</text>
   <text x="70" y="490" font-size="12" fill="#F59E0B">1. Add Tool nodes: Web Search, Calculator, Code Review, File operations</text>
   <text x="70" y="515" font-size="12" fill="#F59E0B">2. Assign tools to workers based on their roles</text>
   
@@ -82,7 +82,7 @@
   
   <!-- Step 5: Execute -->
   <rect x="50" y="680" width="800" height="100" rx="10" fill="#FEE2E2" stroke="#EF4444" stroke-width="2"/>
-  <text x="70" y="710" font-size="16" fill="#991B1B" font-weight="bold">🔴 Step 5: Execute & Monitor</text>
+  <text x="70" y="710" font-size="16" fill="#991B1B" font-weight="bold">🔴 Step 5: Execute and Monitor</text>
   <text x="70" y="740" font-size="12" fill="#EF4444">1. Click "Run" to execute the workflow</text>
   <text x="70" y="765" font-size="12" fill="#EF4444">2. View real-time execution in Logs tab</text>
   
