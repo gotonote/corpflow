@@ -1,7 +1,7 @@
 # CorpFlow
 
 <p align="center">
-  <img src="docs/logo.svg" width="200" alt="CorpFlow Logo">
+  <img src="docs/logo.jpg" width="200" alt="CorpFlow Logo">
 </p>
 
 **Multi-Agent Collaboration Platform**
