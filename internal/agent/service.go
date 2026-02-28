@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os"
 	"strings"
+	"time"
 
 	"github.com/sashabaranov/go-openai"
 	"corpflow/internal/memory"
@@ -493,4 +494,69 @@ func ToOpenAITools(tools []Tool) []openai.Tool {
 		}
 	}
 	return result
+}
+
+// ========== 定时绩效评估 ==========
+
+// PerformanceEvalConfig 绩效评估定时任务配置
+type PerformanceEvalConfig struct {
+	EvalInterval time.Duration // 评估间隔，如 1小时、每天
+	Models        []string      // 可用模型列表
+	Workers       []string      // 待评估的下属列表: ["Manager", "Worker"]
+}
+
+// StartPerformanceEvalScheduler 启动绩效评估定时调度器
+func (s *Service) StartPerformanceEvalScheduler(cfg PerformanceEvalConfig) {
+	go func() {
+		ticker := time.NewTicker(cfg.EvalInterval)
+		defer ticker.Stop()
+		
+		for range ticker.C {
+			s.runPerformanceEval(cfg)
+		}
+	}()
+}
+
+// runPerformanceEval 执行绩效评估
+func (s *Service) runPerformanceEval(cfg PerformanceEvalConfig) {
+	ctx := context.Background()
+	
+	// 获取所有下属的最近工作记录
+	for _, worker := range cfg.Workers {
+		// 获取该下属最近的工作成果
+		performance := s.getWorkerPerformance(worker)
+		
+		// 领导评估下属
+		leaderRole := s.getLeaderRole(worker) // Manager的领导是CEO，Worker的领导是Manager
+		leaderModel := s.defaultModel
+		
+		// 评估是否需要更换模型
+		newModel := s.evaluateAndSwitchModel(ctx, cfg.Models, leaderRole, leaderModel, performance)
+		
+		if newModel != leaderModel {
+			fmt.Printf("[绩效评估] %s 模型更换: %s -> %s\n", worker, leaderModel, newModel)
+			// TODO: 更新该下属使用的模型配置
+		} else {
+			fmt.Printf("[绩效评估] %s 模型保持: %s (评分OK)\n", worker, leaderModel)
+		}
+	}
+}
+
+// getWorkerPerformance 获取下属的工作表现数据
+func (s *Service) getWorkerPerformance(worker string) string {
+	// TODO: 从数据库或记忆服务获取下属最近的工作记录
+	// 这里返回模拟数据
+	return fmt.Sprintf("%s 最近完成了代码审查、测试生成等任务，工作质量良好", worker)
+}
+
+// getLeaderRole 获取下属对应的领导角色
+func (s *Service) getLeaderRole(worker string) string {
+	switch worker {
+	case "Manager":
+		return "CEO"
+	case "Worker":
+		return "Manager"
+	default:
+		return "CEO"
+	}
 }
