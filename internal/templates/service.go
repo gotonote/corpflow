@@ -17,24 +17,22 @@ const SimpleChat = `{
   ]
 }`
 
-// Template 2: Multi-Model Voting
-const MultiModelVoting = `{
-  "name": "Multi-Model Voting",
-  "description": "Let multiple AI models vote on best answer",
+// Template 2: Multi-Agent Collaboration
+const MultiAgentCollaboration = `{
+  "name": "Multi-Agent Collaboration",
+  "description": "CEO → Manager → Worker collaborative problem solving",
   "nodes": [
-    {"id": "1", "type": "trigger", "data": {"label": "用户问题"}},
-    {"id": "2", "type": "agent", "data": {"label": "GPT-4", "model": "gpt-4"}},
-    {"id": "3", "type": "agent", "data": {"label": "GLM-4", "model": "glm-4"}},
-    {"id": "4", "type": "agent", "data": {"label": "Kimi", "model": "moonshot-v1-8k-chat"}},
-    {"id": "5", "type": "condition", "data": {"label": "投票选择最佳"}},
-    {"id": "6", "type": "output", "data": {"label": "输出最佳答案"}}
+    {"id": "1", "type": "trigger", "data": {"label": "用户任务"}},
+    {"id": "2", "type": "agent", "data": {"label": "CEO", "role": "ceo", "prompt": "分析任务，分解为子任务"}},
+    {"id": "3", "type": "agent", "data": {"label": "Manager", "role": "manager", "prompt": "分配子任务给Worker"}},
+    {"id": "4", "type": "agent", "data": {"label": "Worker", "role": "worker", "prompt": "执行具体任务"}},
+    {"id": "5", "type": "agent", "data": {"label": "CEO", "role": "ceo_final", "prompt": "汇总结果，给出最终方案"}},
+    {"id": "6", "type": "output", "data": {"label": "输出最终答案"}}
   ],
   "edges": [
     {"id": "e1-2", "source": "1", "target": "2"},
-    {"id": "e1-3", "source": "1", "target": "3"},
-    {"id": "e1-4", "source": "1", "target": "4"},
-    {"id": "e2-5", "source": "2", "target": "5"},
-    {"id": "e3-5", "source": "3", "target": "5"},
+    {"id": "e2-3", "source": "2", "target": "3"},
+    {"id": "e3-4", "source": "3", "target": "4"},
     {"id": "e4-5", "source": "4", "target": "5"},
     {"id": "e5-6", "source": "5", "target": "6"}
   ]
@@ -176,7 +174,7 @@ const NewsSummarizer = `{
 // All templates
 var AllTemplates = []Template{
   {"simple-chat", "Simple Chat", "Basic AI chat", SimpleChat},
-  {"multi-model-voting", "Multi-Model Voting", "Let AI models vote", MultiModelVoting},
+  {"multi-agent-collaboration", "Multi-Agent Collaboration", "CEO + Manager + Worker collaboration", MultiAgentCollaboration},
   {"research-assistant", "Research Assistant", "Search & analyze", ResearchAssistant},
   {"customer-service", "Customer Service", "AI support", CustomerService},
   {"code-review", "Code Review", "Automated code review", CodeReview},

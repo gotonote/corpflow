@@ -42,28 +42,64 @@ func (s *Service) Process(ctx context.Context, input, userID string) (string, er
 }
 
 // ProcessWithVoting 使用智能体投票处理
+// TODO: 迁移到多智能体协作模式
 func (s *Service) ProcessWithVoting(ctx context.Context, cfg Config, input string) (string, error) {
-	// 检查是否启用投票且配置了多个模型
-	if !cfg.AutoVote || len(cfg.VotingModels) < 2 {
-		// 未启用投票或只配置1个模型，直接使用默认模型
-		return s.callModel(ctx, cfg.Model, cfg.SystemPrompt, input)
+	// 检查是否启用协作模式
+	if cfg.CollaborationMode {
+		return s.ProcessWithCollaboration(ctx, cfg, input)
 	}
 	
-	// 使用Model服务的投票功能
-	voteReq := model.VoteRequest{
-		Models:       cfg.VotingModels,
-		Messages:     []model.Message{{Role: "user", Content: input}},
-		SystemPrompt: cfg.SystemPrompt,
-		VotingMethod: cfg.VotingMethod,
-		TaskType:     "general",
+	// 降级为普通单智能体处理
+	return s.callModel(ctx, cfg.Model, cfg.SystemPrompt, input)
+}
+
+// ProcessWithCollaboration 多智能体协作处理
+// CEO 分解任务 → Manager 分配任务 → Worker 执行 → Manager 汇总 → CEO 最终决策
+func (s *Service) ProcessWithCollaboration(ctx context.Context, cfg Config, input string) (string, error) {
+	// 1. CEO 角色：分析任务，分解为子任务
+	ceoPrompt := cfg.CEOPrompt
+	if ceoPrompt == "" {
+		ceoPrompt = "你是一个CEO，负责分析用户需求并分解任务。分析以下任务，将其分解为具体的子任务："
 	}
-	
-	voteResp, err := s.modelService.Vote(ctx, voteReq)
+	ceoInput := ceoPrompt + "\n\n用户任务: " + input
+	ceoResponse, err := s.callModel(ctx, cfg.Model, ceoPrompt, input)
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("CEO 分析失败: %v", err)
 	}
 	
-	return voteResp.WinnerContent, nil
+	// 2. Manager 角色：接收CEO分解的子任务，分配给Worker
+	managerPrompt := cfg.ManagerPrompt
+	if managerPrompt == "" {
+		managerPrompt = "你是一个Manager，负责将任务分配给具体的执行者。根据CEO的指示，安排每个子任务的执行顺序和负责人："
+	}
+	managerResponse, err := s.callModel(ctx, cfg.Model, managerPrompt, "CEO分析结果: "+ceoResponse+"\n\n原始任务: "+input)
+	if err != nil {
+		return "", fmt.Errorf("Manager 分配失败: %v", err)
+	}
+	
+	// 3. Worker 角色：执行具体任务
+	workerPrompt := cfg.WorkerPrompt
+	if workerPrompt == "" {
+		workerPrompt = "你是一个Worker，负责执行具体的任务。根据Manager的安排，执行以下任务："
+	}
+	workerResponse, err := s.callModel(ctx, cfg.Model, workerPrompt, "Manager安排: "+managerResponse+"\n\n请执行具体任务并给出结果。")
+	if err != nil {
+		return "", fmt.Errorf("Worker 执行失败: %v", err)
+	}
+	
+	// 4. CEO 最终决策：汇总所有结果，给出最终答案
+	finalPrompt := "你是一个CEO，负责整合所有信息给出最终答案。请综合以下各个环节的结果，给出最终解决方案："
+	finalResponse, err := s.callModel(ctx, cfg.Model, finalPrompt, 
+		"CEO分析: "+ceoResponse+"\n\nManager安排: "+managerResponse+"\n\nWorker执行结果: "+workerResponse+"\n\n原始任务: "+input)
+	if err != nil {
+		return "", fmt.Errorf("CEO 最终决策失败: %v", err)
+	}
+	
+	// 汇总完整流程
+	result := fmt.Sprintf("【任务分析】\n%s\n\n【任务分配】\n%s\n\n【执行结果】\n%s\n\n【最终方案】\n%s", 
+		ceoResponse, managerResponse, workerResponse, finalResponse)
+	
+	return result, nil
 }
 
 // ProcessWithAgent 使用指定智能体处理 (带记忆)
@@ -223,10 +259,11 @@ type Config struct {
 	Temperature float64                `json:"temperature"`
 	MaxTokens   int                    `json:"max_tokens"`
 	
-	// 多模型投票配置
-	VotingModels  []string             `json:"voting_models"`  // 参与投票的模型列表
-	VotingMethod string                `json:"voting_method"`  // comprehensive/cross/length
-	AutoVote     bool                  `json:"auto_vote"`      // 是否启用自动投票
+	// 多智能体协作配置
+	CollaborationMode bool              `json:"collaboration_mode"`  // 是否启用多智能体协作
+	CEOPrompt         string            `json:"ceo_prompt"`          // CEO 角色提示
+	ManagerPrompt     string            `json:"manager_prompt"`      // Manager 角色提示
+	WorkerPrompt      string            `json:"worker_prompt"`       // Worker 角色提示
 }
 
 // Tool 工具定义

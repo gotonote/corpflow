@@ -37,11 +37,12 @@ function App() {
 // Quick Templates
 const templates = [
   { id: 'simple-chat', name: '💬 Simple Chat', desc: 'Basic AI conversation' },
-  { id: 'multi-voting', name: '🗳️ Multi-Model Vote', desc: 'Multiple AI vote' },
+  { id: 'multi-agent', name: '🤝 Multi-Agent Collab', desc: 'CEO + Manager + Worker' },
   { id: 'research', name: '🔍 Research', desc: 'Search & analyze' },
   { id: 'customer-service', name: '🎧 Customer Service', desc: 'AI support bot' },
   { id: 'code-review', name: '📝 Code Review', desc: 'Automated review' },
   { id: 'content', name: '✍️ Content', desc: 'Social media' },
+  { id: 'software-dev', name: '🛠️ Software Dev', desc: 'Full-stack development' },
 ]
 
 function HomePanel() {
@@ -73,7 +74,7 @@ function HomePanel() {
         <h3>✨ Features</h3>
         <div className="features-grid">
           <div className="feature-card"><span>🤖</span><h4>AI Agents</h4><p>GPT-4, Claude, GLM-4, Kimi, Qwen, DeepSeek</p></div>
-          <div className="feature-card"><span>🗳️</span><h4>Voting</h4><p>Multi-model voting & consensus</p></div>
+          <div className="feature-card"><span>🤝</span><h4>Collaboration</h4><p>Multi-agent teamwork</p></div>
           <div className="feature-card"><span>🔀</span><h4>Flows</h4><p>Visual workflow automation</p></div>
           <div className="feature-card"><span>💬</span><h4>Channels</h4><p>Feishu, WeChat, Telegram, Discord</p></div>
           <div className="feature-card"><span>🔧</span><h4>Tools</h4><p>Shell, Git, Code Review, Test Gen</p></div>
@@ -188,7 +189,7 @@ const mockLogs = [
   { id: '1', flow: 'Simple Chat', status: 'success', time: '2 min ago', duration: '1.2s' },
   { id: '2', flow: 'Code Review', status: 'success', time: '5 min ago', duration: '3.5s' },
   { id: '3', flow: 'Research', status: 'failed', time: '10 min ago', duration: '0.5s', error: 'API key missing' },
-  { id: '4', flow: 'Multi-Model Vote', status: 'running', time: 'now', duration: '-' },
+  { id: '4', flow: 'Multi-Agent Collab', status: 'running', time: 'now', duration: '-' },
 ]
 
 function LogsPanel() {
@@ -254,8 +255,8 @@ function SettingsPanel() {
         <select><option>GLM-4 (Recommended)</option><option>GPT-4</option><option>Kimi</option></select>
       </div>
       <div className="settings-section">
-        <h4>🗳️ Multi-Model Voting</h4>
-        <label className="toggle"><input type="checkbox" defaultChecked /><span>Enable voting</span></label>
+        <h4>🤝 Multi-Agent Collaboration</h4>
+        <label className="toggle"><input type="checkbox" defaultChecked /><span>Enable collaboration (CEO → Manager → Worker)</span></label>
       </div>
     </div>
   )
