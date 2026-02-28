@@ -34,6 +34,7 @@ CorpFlow is a **multi-agent collaboration platform** that enables you to:
 
 ![Demo: Build AI Team](docs/demo.svg)
 
+### Why CorpFlow
 
 1. **🔀 Visual Flow Editor** - Unlike CLI tools, CorpFlow provides a visual drag-and-drop workflow builder that's easy to use
 
