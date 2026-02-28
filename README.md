@@ -26,28 +26,7 @@ CorpFlow is a **multi-agent collaboration platform** that enables you to:
 
 ## Architecture
 
-## Architecture
-
 ![Architecture Diagram](docs/architecture.svg)
-
-### Layer Description
-
-| Layer | Color | Components |
-|-------|-------|------------|
-| 🔵 **Input** | <span style="color:#3B82F6">**Blue**</span> | Mobile App, Web Frontend, Channels |
-| 🟡 **Gateway** | <span style="color:#F59E0B">**Yellow**</span> | API Gateway (Go Gin) |
-| 🟢 **Core** | <span style="color:#10B981">**Green**</span> | Agent, Flow, Channel, Tools, Logs, Memory, Template |
-| 🟣 **Model** | <span style="color:#8B5CF6">**Purple**</span> | OpenAI, Zhipu, Anthropic, Kimi, Qwen, DeepSeek, MiniMax |
-| 🔴 **Output** | <span style="color:#EF4444">**Red**</span> | Response, Logs, Export |
-| ⚫ **Data** | <span style="color:#6B7280">**Gray**</span> | PostgreSQL, Redis, File Store |
-
-### Data Flow
-
-```
-User → API Gateway → Core Services → AI Models → Response
-                    ↓
-               Data Layer
-```
 
 ---
 
@@ -151,28 +130,7 @@ vim .env
 docker-compose up -d
 ```
 
-### Backend (Go without Docker)
-
-```bash
-# Install Go 1.21+
-
-# Clone the repo
-git clone https://github.com/gotonote/corpflow.git
-cd corpflow
-
-# Copy configuration
-cp .env.example .env
-
-# Edit .env with your API keys
-vim .env
-
-# Start backend (requires PostgreSQL and Redis)
-go run cmd/server/main.go
-```
-
-> **Note**: Without Docker, you need to install and run PostgreSQL (port 5432) and Redis (port 6379) locally.
-
-#### One-Click Install Script
+### One-Click Install (Recommended)
 
 ```bash
 # Run the install script
@@ -216,149 +174,6 @@ flutter run
 # Build for Android
 flutter build apk --release
 ```
-
----
-
-## Demo: How to Use Visual Flow Editor
-
-### Step 1: Open Flow Editor
-
-Navigate to **Flows** tab in the web interface.
-
-### Step 2: Drag Nodes from Sidebar
-
-The left sidebar contains node types:
-
-```
-📦 Node Library
-├── ⚡ Trigger (消息触发)
-│   ├── Message Trigger
-│   ├── Scheduled Task  
-│   └── Webhook
-├── 🤖 Agent (AI智能体)
-│   └── Custom AI Agent
-├── 🧠 LLM (大模型)
-│   └── GPT-4 / Claude / GLM-4
-├── 🔀 Condition (条件分支)
-│   └── If/Else branching
-├── 🔧 Tool (工具)
-│   ├── Browser
-│   ├── Web Search
-│   ├── Calculator
-│   └── Code Execution
-└── 📤 Output
-    └── Return Result
-```
-
-### Step 3: Connect Nodes
-
-1. Click the **handle** (dot) on the bottom of a node
-2. Drag to the **handle** on the top of another node
-3. Release to create a connection
-
-### Step 4: Configure Node Properties
-
-Click any node to open the **Properties Panel** on the right:
-
-```
-⚙️ Node Configuration
-├── Name: "AI Assistant"
-├── Description: "Main agent"
-└── Model: [GPT-4 ▼]
-    ├── GPT-4
-    ├── Claude 3 Sonnet
-    └── GLM-4
-```
-
-### Step 5: Save and Execute
-
-```
-┌─────────────────────────────────────┐
-│ 💾 Save  │  ▶️ Execute  │ 📥 Import │
-└─────────────────────────────────────┘
-```
-
-- **Save**: Saves flow to database
-- **Execute**: Runs the workflow with current inputs
-
-### Example Flow: Customer Service Bot
-
-```
-┌──────────┐    ┌──────────┐    ┌──────────┐    ┌──────────┐
-│  Trigger │───▶│  Agent   │───▶│Condition │───▶│  Output  │
-│ (用户消息)│    │(理解问题) │    │(已知问题?)│    │ (回复)   │
-└──────────┘    └──────────┘    └──────────┘    └──────────┘
-                              │
-                    ┌─────────┴─────────┐
-                    ▼                 ▼
-              ┌──────────┐       ┌──────────┐
-              │ Knowledge│       │  Human   │
-              │  Base    │       │ Transfer │
-              └──────────┘       └──────────┘
-```
-
----
-
-## Demo: Multi-Model Voting
-
-### Enable Voting
-
-Go to **Settings** → Enable **Multi-Model Voting**
-
-### How It Works
-
-1. User asks a question
-2. Multiple AI models respond simultaneously
-3. Models evaluate each other's answers
-4. Best answer is selected by consensus
-
-### Example
-
-```
-Question: "How to improve product user experience?"
-
-┌────────────────────────────────────────────────┐
-│ GPT-4's Answer                                 │
-│ → Focus on onboarding flow                     │
-│ → Score: 85                                    │
-├────────────────────────────────────────────────┤
-│ GLM-4's Answer                                 │
-│ → Add personalization features                 │
-│ → Score: 92 ⭐ (Winner)                        │
-├────────────────────────────────────────────────┤
-│ Kimi's Answer                                  │
-│ → Improve mobile responsiveness                │
-│ → Score: 78                                    │
-└────────────────────────────────────────────────┘
-
-Final Winner: GLM-4 (Score: 92)
-```
-
----
-
-## Demo: Using Tools
-
-### Available Tools
-
-| Tool | Description | Example |
-|------|-------------|---------|
-| `shell` | Execute shell commands | `{"command": "ls -la"}` |
-| `git` | Git operations | `{"action": "commit", "message": "fix bug"}` |
-| `web_search` | Search the web | `{"query": "CorpFlow AI"}` |
-| `web_fetch` | Get web content | `{"url": "https://github.com"}` |
-| `file_read` | Read file | `{"path": "/app/main.go"}` |
-| `file_write` | Write file | `{"path": "/app/test.go", "content": "..."}` |
-| `code_review` | AI code review | `{"code": "func main() {...}"}` |
-| `test_gen` | Generate tests | `{"code": "func Add(a,b int) int", "framework": "go"}` |
-| `calculator` | Math calculation | `{"expression": "2+2*3"}` |
-
-### Run Tool Example
-
-1. Go to **Tools** tab
-2. Select a tool (e.g., Calculator)
-3. Enter input: `{"expression": "100/5+20"}`
-4. Click **Run**
-5. View output: `Result: 100/5+20 = 40`
 
 ---
 
