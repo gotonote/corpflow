@@ -157,7 +157,7 @@ const initialEdges: Edge[] = [
 ]
 
 // 侧边栏组件
-function Sidebar({ onDrag }: { onDrag: (type: string, label: string) => void }) {
+function Sidebar({ onDrag }: { onDrag: any }) {
   return (
     <aside className="sidebar">
       <h3>📦 节点库</h3>
