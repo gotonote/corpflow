@@ -224,7 +224,7 @@ function PropertiesPanel({
   selectedNode, 
   setNodes
 }: { 
-  selectedNode: Node | null
+  selectedNode: any
   setNodes: any
 }) {
   if (!selectedNode) {
