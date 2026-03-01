@@ -222,10 +222,10 @@ function Sidebar({ onDrag }: { onDrag: (type: string, label: string) => void }) 
 // 节点配置面板
 function PropertiesPanel({ 
   selectedNode, 
-  onUpdate 
+  setNodes
 }: { 
   selectedNode: Node | null
-  onUpdate: (id: string, data: Partial<NodeData>) => void 
+  setNodes: any
 }) {
   if (!selectedNode) {
     return (
@@ -238,12 +238,12 @@ function PropertiesPanel({
     )
   }
 
-const handleChange = (key: string, value: string) => {
-    if (selectedNode) {
+  const handleChange = (key: string, value: string) => {
+    if (selectedNode && setNodes) {
       const node = selectedNode as Node<any>
       node.data[key] = value
-      setNodes((nds) =>
-        nds.map((n) => (n.id === selectedNode.id ? { ...n, data: node.data } : n))
+      setNodes((nds: any) =>
+        nds.map((n: any) => (n.id === selectedNode.id ? { ...n, data: node.data } : n))
       )
     }
   }
@@ -414,17 +414,6 @@ export default function FlowEditor() {
     event.dataTransfer.effectAllowed = 'move'
   }
 
-  const updateNodeData = useCallback((id: string, data: Partial<NodeData>) => {
-    setNodes((nds) =>
-      nds.map((node) => {
-        if (node.id === id) {
-          return { ...node, data: { ...node.data, ...data } }
-        }
-        return node
-      })
-    )
-  }, [setNodes])
-
   // 保存流程
   const handleSave = () => {
     const flowData = {
@@ -501,7 +490,7 @@ export default function FlowEditor() {
 
         <PropertiesPanel 
           selectedNode={selectedNode} 
-          onUpdate={updateNodeData}
+          setNodes={setNodes}
         />
       </div>
     </div>
