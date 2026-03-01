@@ -154,6 +154,24 @@ func (s *Service) initDefaultModels() {
 		MaxTokens:   4096,
 	}
 
+	// GLM-5 (OpenClaw 兼容)
+	s.models["glm-5"] = &ModelConfig{
+		Provider:    ProviderGLM,
+		ModelName:   "glm-5",
+		APIKey:      os.Getenv("GLM_5_API_KEY"),
+		BaseURL:     "https://open.bigmodel.cn/api/paas/v4",
+		Temperature: 0.7,
+		MaxTokens:   8192,
+	}
+	s.models["glm-4v-plus"] = &ModelConfig{
+		Provider:    ProviderGLM,
+		ModelName:   "glm-4v-plus",
+		APIKey:      os.Getenv("ZHIPU_API_KEY"),
+		BaseURL:     "https://open.bigmodel.cn/api/paas/v4",
+		Temperature: 0.7,
+		MaxTokens:   4096,
+	}
+
 	// MiniMax
 	s.models["abab6.5s-chat"] = &ModelConfig{
 		Provider:    ProviderMiniMax,
@@ -162,6 +180,24 @@ func (s *Service) initDefaultModels() {
 		BaseURL:     "https://api.minimax.chat/v1",
 		Temperature: 0.7,
 		MaxTokens:   4096,
+	}
+
+	// MiniMax M2.5 (OpenClaw 兼容)
+	s.models["MiniMax-M2.5"] = &ModelConfig{
+		Provider:    ProviderMiniMax,
+		ModelName:   "MiniMax-M2.5",
+		APIKey:      os.Getenv("MINIMAX_M2_5_API_KEY"),
+		BaseURL:     "https://api.minimax.chat/v1",
+		Temperature: 0.7,
+		MaxTokens:   8192,
+	}
+	s.models["abab6.5g-chat"] = &ModelConfig{
+		Provider:    ProviderMiniMax,
+		ModelName:   "abab6.5g-chat",
+		APIKey:      os.Getenv("MINIMAX_API_KEY"),
+		BaseURL:     "https://api.minimax.chat/v1",
+		Temperature: 0.7,
+		MaxTokens:   8192,
 	}
 
 	// Kimi (月之暗面)
@@ -177,6 +213,24 @@ func (s *Service) initDefaultModels() {
 		Provider:    ProviderKimi,
 		ModelName:   "moonshot-v1-32k-chat",
 		APIKey:      os.Getenv("KIMI_API_KEY"),
+		BaseURL:     "https://api.moonshot.cn/v1",
+		Temperature: 0.7,
+		MaxTokens:   32768,
+	}
+
+	// Kimi K2.5 (OpenClaw 兼容)
+	s.models["kimi-k2.5"] = &ModelConfig{
+		Provider:    ProviderKimi,
+		ModelName:   "kimi-k2.5",
+		APIKey:      os.Getenv("KIMI_K2_5_API_KEY"),
+		BaseURL:     "https://api.moonshot.cn/v1",
+		Temperature: 0.7,
+		MaxTokens:   32768,
+	}
+	s.models["kimi-coding-k2p5"] = &ModelConfig{
+		Provider:    ProviderKimi,
+		ModelName:   "kimi-coding-k2p5",
+		APIKey:      os.Getenv("KIMI_K2_5_API_KEY"),
 		BaseURL:     "https://api.moonshot.cn/v1",
 		Temperature: 0.7,
 		MaxTokens:   32768,
