@@ -130,7 +130,7 @@ const nodeTypes = {
 }
 
 // 初始节点
-const initialNodes: Node<NodeData>[] = [
+const initialNodes: Node[] = [
   {
     id: '1',
     type: 'trigger',
@@ -224,7 +224,7 @@ function PropertiesPanel({
   selectedNode, 
   onUpdate 
 }: { 
-  selectedNode: Node<NodeData> | null
+  selectedNode: Node | null
   onUpdate: (id: string, data: Partial<NodeData>) => void 
 }) {
   if (!selectedNode) {
@@ -349,9 +349,9 @@ function PropertiesPanel({
 
 // 主流程编辑器组件
 export default function FlowEditor() {
-  const [nodes, setNodes, onNodesChange] = useNodesState<NodeData>(initialNodes)
+  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes)
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges)
-  const [selectedNode, setSelectedNode] = useState<Node<NodeData> | null>(null)
+  const [selectedNode, setSelectedNode] = useState<Node | null>(null)
 
   const onConnect = useCallback(
     (params: Connection) => setEdges((eds) => addEdge({ 
@@ -382,7 +382,7 @@ export default function FlowEditor() {
         y: event.clientY - reactFlowBounds.top - 50,
       }
 
-      const newNode: Node<NodeData> = {
+      const newNode: Node = {
         id: `node_${Date.now()}`,
         type,
         position,
@@ -394,7 +394,7 @@ export default function FlowEditor() {
     [setNodes],
   )
 
-  const onNodeClick = useCallback((_: React.MouseEvent, node: Node<NodeData>) => {
+  const onNodeClick = useCallback((_: React.MouseEvent, node: Node) => {
     setSelectedNode(node)
   }, [])
 
