@@ -148,6 +148,11 @@ func (a *WeChatAdapter) handleMessage(msg *struct {
 	MsgId        string   `xml:"MsgId"`
 	Event        string   `xml:"Event"`
 	EventKey     string   `xml:"EventKey"`
+	ScanCodeInfo struct {
+		ScanType   string `xml:"ScanType"`
+		ScanResult string `xml:"ScanResult"`
+	} `xml:"ScanCodeInfo"`
+	MenuID string `xml:"MenuId"`
 }) *Message {
 
 	var content string
@@ -183,9 +188,9 @@ func (a *WeChatAdapter) handleMessage(msg *struct {
 	return &Message{
 		Type:      msgType,
 		Content:   content,
-		UserID:    m.FromUserName,
-		ChannelID: m.ToUserName,
-		Channel:   string(ChannelType("wechat")),
+		UserID:    msg.FromUserName,
+		ChannelID: msg.ToUserName,
+		Channel:   string(ChannelWeChat),
 	}
 }
 
@@ -245,7 +250,7 @@ func (a *WeChatAdapter) SendMessageWithType(toUserName, msgType, content string)
 
 // SendText 发送文本消息 (实现Sender接口)
 func (a *WeChatAdapter) SendText(userID, text string) error {
-	return a.SendMessage(userID, "text", text)
+	return a.SendMessageWithType(userID, "text", text)
 }
 
 // ========== Access Token管理 ==========
@@ -409,7 +414,7 @@ func (a *WeChatAdapter) UploadMedia(mediaType, filePath string) (string, error) 
 		return "", err
 	}
 
-	apiURL := fmt.Sprintf("https://api.weixin.qq.com/cgi-bin/media/upload?access_token=%s&type=%s",
+	_ = fmt.Sprintf("https://api.weixin.qq.com/cgi-bin/media/upload?access_token=%s&type=%s",
 		token, mediaType)
 
 	// TODO: 实现文件上传
