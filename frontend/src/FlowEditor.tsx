@@ -18,8 +18,8 @@ import {
 import '@xyflow/react/dist/style.css'
 import './FlowEditor.css'
 
-// 节点类型 - 扩展 Node
-type NodeData = Node<{
+// 节点数据类型
+type NodeData = {
   label: string
   description?: string
   model?: string
@@ -28,10 +28,12 @@ type NodeData = Node<{
   toolType?: string
   toolName?: string
   prompt?: string
-}>
+  outputType?: string
+  [key: string]: any
+}
 
 // 自定义节点组件
-function AgentNode({ data, selected }: { data: NodeData['data']; selected?: boolean }) {
+function AgentNode({ data, selected }: { data: NodeData; selected?: boolean }) {
   return (
     <div className={`custom-node agent-node ${selected ? 'selected' : ''}`}>
       <Handle type="target" position={Position.Top} />
@@ -60,7 +62,7 @@ function TriggerNode({ data, selected }: { data: NodeData['data']; selected?: bo
   )
 }
 
-function ConditionNode({ data, selected }: { data: NodeData["data"]; selected?: boolean }) {
+function ConditionNode({ data, selected }: { data: NodeData; selected?: boolean }) {
   return (
     <div className={`custom-node condition-node ${selected ? 'selected' : ''}`}>
       <Handle type="target" position={Position.Top} />
@@ -76,7 +78,7 @@ function ConditionNode({ data, selected }: { data: NodeData["data"]; selected?: 
   )
 }
 
-function ToolNode({ data, selected }: { data: NodeData["data"]; selected?: boolean }) {
+function ToolNode({ data, selected }: { data: NodeData; selected?: boolean }) {
   return (
     <div className={`custom-node tool-node ${selected ? 'selected' : ''}`}>
       <Handle type="target" position={Position.Top} />
@@ -90,7 +92,7 @@ function ToolNode({ data, selected }: { data: NodeData["data"]; selected?: boole
   )
 }
 
-function LLMNode({ data, selected }: { data: NodeData["data"]; selected?: boolean }) {
+function LLMNode({ data, selected }: { data: NodeData; selected?: boolean }) {
   return (
     <div className={`custom-node llm-node ${selected ? 'selected' : ''}`}>
       <Handle type="target" position={Position.Top} />
@@ -104,7 +106,7 @@ function LLMNode({ data, selected }: { data: NodeData["data"]; selected?: boolea
   )
 }
 
-function OutputNode({ data, selected }: { data: NodeData["data"]; selected?: boolean }) {
+function OutputNode({ data, selected }: { data: NodeData; selected?: boolean }) {
   return (
     <div className={`custom-node output-node ${selected ? 'selected' : ''}`}>
       <Handle type="target" position={Position.Top} />
