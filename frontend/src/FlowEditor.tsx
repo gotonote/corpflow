@@ -13,6 +13,7 @@ import {
   BackgroundVariant,
   Panel,
   Position,
+  Handle,
 } from '@xyflow/react'
 import '@xyflow/react/dist/style.css'
 import './FlowEditor.css'
