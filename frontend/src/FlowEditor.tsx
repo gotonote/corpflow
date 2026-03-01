@@ -238,10 +238,13 @@ function PropertiesPanel({
     )
   }
 
-  const handleChange = (key: string, value: string) => {
+const handleChange = (key: string, value: string) => {
     if (selectedNode) {
-      const nodeData = selectedNode.data as NodeData
-      onUpdate(selectedNode.id, { [key]: value })
+      const node = selectedNode as Node<any>
+      node.data[key] = value
+      setNodes((nds) =>
+        nds.map((n) => (n.id === selectedNode.id ? { ...n, data: node.data } : n))
+      )
     }
   }
 
