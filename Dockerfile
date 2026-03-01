@@ -2,7 +2,8 @@ FROM golang:1.21-alpine AS builder
 
 WORKDIR /app
 
-COPY go.mod go.sum ./
+# 先只复制 go.mod，下载依赖后才会生成 go.sum
+COPY go.mod ./
 RUN go mod download
 
 COPY . .
