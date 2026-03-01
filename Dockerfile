@@ -5,9 +5,9 @@ WORKDIR /app
 # 设置 Go 国内代理
 RUN go env -w GOPROXY=https://goproxy.cn,direct
 
-# 先只复制 go.mod，下载依赖后才会生成 go.sum
+# 复制 go.mod 并获取依赖（自动生成 go.sum）
 COPY go.mod ./
-RUN go mod download
+RUN go get ./... && go mod tidy
 
 COPY . .
 RUN CGO_ENABLED=0 GOOS=linux go build -o server ./cmd/server
