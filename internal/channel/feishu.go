@@ -293,7 +293,7 @@ func NewFeishuHandler(appID, appSecret, callbackURL string) *FeishuHandler {
 	adapter.appID = appID
 	adapter.secret = appSecret
 
-	return &FeishuAdapter{
+	return &FeishuHandler{
 		adapter:    adapter,
 		callbackURL: callbackURL,
 	}

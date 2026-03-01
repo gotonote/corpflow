@@ -115,37 +115,47 @@ func (a *WeChatAdapter) ParseWebhook(req *http.Request) (*Message, error) {
 }
 
 // handleEvent 处理事件
-func (a *WeChatAdapter) handleEvent(msg *xml.Token) (*Message, error) {
-	// 需要使用完整结构体
+func (a *WeChatAdapter) handleEvent(msg *struct {
+	XMLName      xml.Name `xml:"xml"`
+	ToUserName   string   `xml:"ToUserName"`
+	FromUserName string   `xml:"FromUserName"`
+	CreateTime   string   `xml:"CreateTime"`
+	MsgType      string   `xml:"MsgType"`
+	Content      string   `xml:"Content"`
+	MsgId        string   `xml:"MsgId"`
+	Event        string   `xml:"Event"`
+	EventKey     string   `xml:"EventKey"`
+	ScanCodeInfo struct {
+		ScanType   string `xml:"ScanType"`
+		ScanResult string `xml:"ScanResult"`
+	} `xml:"ScanCodeInfo"`
+	MenuID string `xml:"MenuId"`
+}) (*Message, error) {
 	return &Message{
 		Type:    "event",
-		Content: msg.(*struct {
-			Event string `xml:"Event"`
-		}).Event,
-		Channel: string(ChannelType("wechat")),
+		Content: msg.Event,
+		Channel: string(ChannelWeChat),
 	}, nil
 }
 
-func (a *WeChatAdapter) handleMessage(msg *interface{}) *Message {
-	// 类型断言
-	m := msg.(*struct {
-		XMLName      xml.Name
-		ToUserName   string
-		FromUserName string
-		CreateTime   string
-		MsgType      string
-		Content      string
-		MsgId        string
-		Event        string
-		EventKey     string
-	})
+func (a *WeChatAdapter) handleMessage(msg *struct {
+	XMLName      xml.Name `xml:"xml"`
+	ToUserName   string   `xml:"ToUserName"`
+	FromUserName string   `xml:"FromUserName"`
+	CreateTime   string   `xml:"CreateTime"`
+	MsgType      string   `xml:"MsgType"`
+	Content      string   `xml:"Content"`
+	MsgId        string   `xml:"MsgId"`
+	Event        string   `xml:"Event"`
+	EventKey     string   `xml:"EventKey"`
+}) *Message {
 
 	var content string
 	var msgType string
 
-	switch m.MsgType {
+	switch msg.MsgType {
 	case "text":
-		content = m.Content
+		content = msg.Content
 		msgType = "text"
 	case "image":
 		msgType = "image"
@@ -166,7 +176,7 @@ func (a *WeChatAdapter) handleMessage(msg *interface{}) *Message {
 		msgType = "link"
 		content = "链接消息"
 	default:
-		msgType = m.MsgType
+		msgType = msg.MsgType
 		content = ""
 	}
 
@@ -179,8 +189,13 @@ func (a *WeChatAdapter) handleMessage(msg *interface{}) *Message {
 	}
 }
 
-// SendMessage 发送消息
-func (a *WeChatAdapter) SendMessage(toUserName, msgType, content string) error {
+// SendMessage 发送消息 (Adapter 接口实现)
+func (a *WeChatAdapter) SendMessage(userID, text string) error {
+	return a.SendMessageWithType(userID, "text", text)
+}
+
+// SendMessageWithType 发送消息 (支持多类型)
+func (a *WeChatAdapter) SendMessageWithType(toUserName, msgType, content string) error {
 	// 获取access_token
 	token, err := a.getAccessToken()
 	if err != nil {

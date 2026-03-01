@@ -58,7 +58,7 @@ func NewManager(db *store.Postgres, redis *store.Redis) *Manager {
 	m.adapters[ChannelFeishu] = NewFeishuAdapter()
 	m.adapters[ChannelTelegram] = NewTelegramAdapter()
 	m.adapters[ChannelDiscord] = NewDiscordAdapter()
-	m.adapters[ChannelWhatsApp] = NewWhatsAppAdapter()
+	// m.adapters[ChannelWhatsApp] = NewWhatsAppAdapter() // TODO: 实现 WhatsApp 适配器
 	m.adapters[ChannelWeChat] = NewWeChatAdapter()
 
 	return m
