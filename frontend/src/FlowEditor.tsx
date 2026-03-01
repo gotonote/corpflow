@@ -239,7 +239,10 @@ function PropertiesPanel({
   }
 
   const handleChange = (key: string, value: string) => {
-    onUpdate(selectedNode.id, { [key]: value })
+    if (selectedNode) {
+      const nodeData = selectedNode.data as NodeData
+      onUpdate(selectedNode.id, { [key]: value })
+    }
   }
 
   return (
