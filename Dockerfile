@@ -5,21 +5,10 @@ WORKDIR /app
 # 设置 Go 国内代理
 RUN go env -w GOPROXY=https://goproxy.cn,direct
 
-# 复制 go.mod 并获取依赖（自动生成 go.sum）
+# 复制 go.mod 并使用 go get 生成 go.sum
 COPY go.mod ./
-RUN go get ./... && go mod tidy
+RUN go get ./... 
 
-COPY . .
+# 复制所有源代码并构建
+COPY . ./
 RUN CGO_ENABLED=0 GOOS=linux go build -o server ./cmd/server
-
-FROM alpine:3.18
-
-RUN apk --no-cache add ca-certificates
-
-WORKDIR /app
-COPY --from=builder /app/server .
-COPY --from=builder /app/internal ./internal
-
-EXPOSE 8080
-
-CMD ["./server"]
