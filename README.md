@@ -62,12 +62,50 @@
 
 ## 🚀 Quick Start
 
+### Choose Deployment Option
+
+| Option | AI Chat | Flow Editor | Complexity |
+|--------|---------|-------------|------------|
+| **Skill Only** | ✅ | ❌ | Easy |
+| **Skill + Frontend** | ✅ | ✅ | Medium |
+
+#### Option 1: Skill Only (AI Chat)
+
+```bash
+# Copy skill to OpenClaw
+cp -r corpflow-skill /home/admin/.openclaw/workspace/skills/
+```
+
+Then chat with OpenClaw in Feishu:
+```
+@OpenClaw 帮我制定本季度 OKR
+```
+
+#### Option 2: Skill + Frontend (Full Features)
+
+```bash
+# 1. Install OpenClaw (if not installed)
+# See: https://docs.openclaw.ai
+
+# 2. Copy skill
+cp -r corpflow-skill /home/admin/.openclaw/workspace/skills/
+
+# 3. Install frontend dependencies
+cd frontend
+npm install
+
+# 4. Install backend dependencies
+cd ../backend
+npm install
+```
+
 ### Requirements
 
 | Component | Version |
 |-----------|---------|
 | Node.js | 18+ |
 | npm | 9+ |
+| OpenClaw | Latest |
 
 ### Installation
 
@@ -75,6 +113,9 @@
 # Clone project
 git clone https://github.com/gotonote/corpflow.git
 cd corpflow
+
+# Copy skill to OpenClaw
+cp -r corpflow-skill ~/.openclaw/workspace/skills/
 
 # Install frontend dependencies
 cd frontend
@@ -85,7 +126,7 @@ cd ../backend
 npm install
 ```
 
-### Start
+### Start Services
 
 ```bash
 # Start backend (Terminal 1)
@@ -112,6 +153,7 @@ npm run dev
 
 ```
 corpflow/
+├── corpflow-skill/     # OpenClaw skill (AI chat)
 ├── frontend/           # React frontend
 │   ├── src/
 │   │   ├── App.tsx         # Main app

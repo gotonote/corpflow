@@ -61,6 +61,43 @@
 
 ## 🚀 快速开始
 
+### 部署方式
+
+| 方式 | AI 对话 | 流程编辑器 | 复杂度 |
+|------|---------|-----------|--------|
+| **仅 Skill** | ✅ | ❌ | 简单 |
+| **Skill + 前端** | ✅ | ✅ | 中等 |
+
+#### 方式 1: 仅 Skill (AI 对话)
+
+```bash
+# 复制 skill 到 OpenClaw
+cp -r corpflow-skill ~/.openclaw/workspace/skills/
+```
+
+然后在飞书与 OpenClaw 对话：
+```
+@OpenClaw 帮我制定本季度 OKR
+```
+
+#### 方式 2: Skill + 前端 (完整功能)
+
+```bash
+# 1. 安装 OpenClaw (如未安装)
+# 参考: https://docs.openclaw.ai
+
+# 2. 复制 skill
+cp -r corpflow-skill ~/.openclaw/workspace/skills/
+
+# 3. 安装前端依赖
+cd frontend
+npm install
+
+# 4. 安装后端依赖
+cd ../backend
+npm install
+```
+
 ### 环境要求
 
 | 组件 | 版本 |
@@ -68,12 +105,23 @@
 | Node.js | 18+ |
 | npm | 9+ |
 
+### 环境要求
+
+| 组件 | 版本 |
+|------|------|
+| Node.js | 18+ |
+| npm | 9+ |
+| OpenClaw | 最新版 |
+
 ### 安装
 
 ```bash
 # 克隆项目
 git clone https://github.com/gotonote/corpflow.git
 cd corpflow
+
+# 复制 skill 到 OpenClaw
+cp -r corpflow-skill ~/.openclaw/workspace/skills/
 
 # 安装前端依赖
 cd frontend
@@ -111,6 +159,7 @@ npm run dev
 
 ```
 corpflow/
+├── corpflow-skill/     # OpenClaw skill (AI 对话)
 ├── frontend/           # React 前端
 │   ├── src/
 │   │   ├── App.tsx         # 主应用
