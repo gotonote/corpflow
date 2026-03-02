@@ -1,292 +1,192 @@
-# 🏢 CorpFlow — 多智能体协作平台
+# CorpFlow — 多智能体协作平台
 
 <p align="center">
-  <img src="docs/logo.jpg" alt="CorpFlow" width="400">
+  <strong>基于 OpenClaw 二次开发的企业级 AI 协作平台</strong>
 </p>
 
 <p align="center">
-  <strong>AI 驱动的公司治理平台</strong>
+  中文 | <a href="README.md">English</a>
 </p>
-
-<p align="center">
-  <a href="https://github.com/gotonote/corpflow/stargazers"><img src="https://img.shields.io/github/stars/gotonote/corpflow?style=for-the-badge" alt="Stars"></a>
-  <a href="https://github.com/gotonote/corpflow/blob/main/LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge" alt="License"></a>
-  <a href="https://discord.gg"><img src="https://img.shields.io/discord/123456789?label=Discord&logo=discord&style=for-the-badge" alt="Discord"></a>
-</p>
-
-**CorpFlow** 是一个 *AI 驱动的公司治理平台*，支持：
-- 构建智能组织架构的 AI 智能体
-- 实现自动化绩效评估和模型动态切换
-- 多渠道部署（飞书、微信、Telegram、Discord）
-- 通过多智能体协作实现公司自治
-
-[官网](https://corpflow.io) · [文档](https://docs.corpflow.io) · [GitHub](https://github.com/gotonote/corpflow) · [English](./README.md)
 
 ---
 
-## 为什么选择 CorpFlow
+## 🏗️ 架构图
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                         用户层                                   │
+│         飞书 │ 微信 │ Telegram │ Web 前端                     │
+└────────────────────────────┬────────────────────────────────────┘
+                             │
+┌────────────────────────────▼────────────────────────────────────┐
+│                    CorpFlow 前端 (React)                        │
+│   ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐     │
+│   │   Home   │  │   Chat   │  │  Flows   │  │   OKR    │     │
+│   └──────────┘  └──────────┘  └──────────┘  └──────────┘     │
+└────────────────────────────┬────────────────────────────────────┘
+                             │ REST API
+┌────────────────────────────▼────────────────────────────────────┐
+│                   CorpFlow 后端 (Express)                       │
+│   ┌──────────┐  ┌──────────┐  ┌──────────┐                   │
+│   │  流程管理  │  │   OKR    │  │  执行器  │                   │
+│   └──────────┘  └──────────┘  └──────────┘                   │
+└────────────────────────────┬────────────────────────────────────┘
+                             │
+┌────────────────────────────▼────────────────────────────────────┐
+│                    OpenClaw Gateway                             │
+│   ┌─────────────────────────────────────────────────────────┐   │
+│   │                    Agent 调度层                          │   │
+│   │   🤖 CEO   │   👔 Manager   │   💻 Worker              │   │
+│   └─────────────────────────────────────────────────────────┘   │
+│   ┌─────────────────────────────────────────────────────────┐   │
+│   │                    工具层                                │   │
+│   │   exec │ browser │ file │ web_search │ feishu_*       │   │
+│   └─────────────────────────────────────────────────────────┘   │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## ✨ 功能特性
 
 | 功能 | 说明 |
 |------|------|
-| 🤖 **AI 智能体** | CEO、Manager、Worker 分层智能体 |
-| 📊 **OKR 管理** | 目标设定与追踪 |
-| 📈 **绩效评估** | 自动化评估与模型切换 |
-| 🗳️ **决策机制** | 群体投票决策 |
-| 🚨 **突发事件处理** | 自动化应急响应 |
-| 💬 **多渠道** | 飞书、微信、Telegram、Discord |
+| 🤖 **多智能体** | CEO → Manager → Worker 三层协作 |
+| 🔀 **流程编排** | 可视化拖拽工作流 |
+| 📊 **OKR 管理** | 目标设定与进度追踪 |
+| ⏰ **定时任务** | 自动生成报告和提醒 |
+| 💬 **多渠道** | 飞书/微信/Telegram/Discord |
 
 ---
 
-## 快速开始
-
-CorpFlow 是一个**多智能体协作平台**，支持：
-- 创建和管理 AI 智能体
-- 拖拽式可视化流程编排
-- 多渠道部署（飞书、微信、Telegram、Discord）
-- 多个 AI 智能体协同完成复杂任务
-
----
-
-
-## 架构图
-
-![架构图](docs/architecture.svg)
-
----
-
-## 演示：构建你的 AI 团队
-
-![Demo: Build AI Team](docs/demo.svg)
-
-### CorpFlow 优势：
-
-1. **🔀 可视化流程编辑器** - 不同于 CLI 工具，提供拖拽式可视化工作流
-
-2. **🤝 多 Agent 协作** - 多个 AI 智能体协同工作，各有分工（CEO、Manager、Worker），共同完成复杂任务
-
-3. **🔧 内置工具市场** - Shell、Git、代码审查、测试生成、网页搜索、文件操作
-
-7. **⚡ 预置模板** - 8+ 个即用工作流：对话、研究、客服、代码审查、内容创作、数据分析、新闻摘要、软件开发
-
----
-
-## 功能特性
-
-| 功能 | 描述 |
-|------|------|
-| 🤖 **AI 智能体** | 创建自定义 AI 智能体，支持多种模型 |
-| 🔀 **流程编排** | 拖拽式可视化工作流自动化 |
-| 💬 **多渠道** | 飞书、微信、Telegram、Discord |
-| 🤝 **多 Agent 协作** | 多个 AI 智能体协同完成复杂任务 |
-| 📱 **移动端** | iOS、Android、macOS、Windows、iPadOS |
-| 🔧 **工具市场** | Shell、Git、代码审查、测试生成 |
-| 📋 **执行日志** | 步骤级执行追踪 |
-| 🧠 **记忆系统** | 层级智能体关系 |
-
----
-
-## 支持的 AI 模型
-
-| 模型 | 提供商 | 环境变量 |
-|------|--------|----------|
-| GPT-4 / GPT-4 Turbo | OpenAI | `OPENAI_API_KEY` |
-| Claude 3 Opus / Sonnet | Anthropic | `ANTHROPIC_API_KEY` |
-| GLM-4 / GLM-4 Flash | 智谱 | `ZHIPU_API_KEY` |
-| Kimi | 月之暗面 | `KIMI_API_KEY` |
-| Qwen Turbo / Plus | 阿里云 | `DASHSCOPE_API_KEY` |
-| DeepSeek Chat / Coder | DeepSeek | `DEEPSEEK_API_KEY` |
-| MiniMax | MiniMax | `MINIMAX_API_KEY` |
-
----
-
-## 快速开始
+## 🚀 快速开始
 
 ### 环境要求
 
-| 组件 | 版本 | 说明 |
-|------|------|------|
-| **Go** | 1.21+ | 后端运行时 |
-| **Node.js** | 18+ | 前端构建 |
-| **PostgreSQL** | 14+ | 数据库 |
-| **Redis** | 7+ | 缓存和会话 |
-| **Flutter** | 3.16+ | 移动端（可选）|
+| 组件 | 版本 |
+|------|------|
+| Node.js | 18+ |
+| npm | 9+ |
 
-### Go 依赖
-
-| 包 | 版本 | 用途 |
-|----|------|------|
-| gin | v1.9.1 | HTTP 框架 |
-| gorm | v1.25.5 | ORM |
-| gorm.io/driver/postgres | v1.5.4 | PostgreSQL 驱动 |
-| go-redis/v9 | v9.3.0 | Redis 客户端 |
-| go-openai | v1.17.0 | OpenAI API |
-| chromedp | v0.9.5 | 浏览器自动化 |
-
-### 前端依赖
-
-| 包 | 版本 | 用途 |
-|----|------|------|
-| react | ^18.2.0 | UI 框架 |
-| @xyflow/react | ^12.0.0 | 流程编辑器 |
-| axios | ^1.6.0 | HTTP 客户端 |
-| vite | ^5.0.0 | 构建工具 |
-| typescript | ^5.3.0 | 类型安全 |
-
-### 后端（Go + Docker）
+### 安装
 
 ```bash
-# 克隆仓库
+# 克隆项目
 git clone https://github.com/gotonote/corpflow.git
 cd corpflow
 
-# 复制配置
-cp .env.example .env
-
-# 编辑 .env 填入你的 API Key
-vim .env
-
-# 使用 Docker 启动
-docker-compose up -d
-```
-
-### 前端（React）
-
-```bash
+# 安装前端依赖
 cd frontend
-
-# 安装依赖
 npm install
 
-# 启动开发服务器
+# 安装后端依赖
+cd ../backend
+npm install
+```
+
+### 启动
+
+```bash
+# 启动后端 (终端 1)
+cd backend
 npm run dev
+# → 运行在 http://localhost:8081
 
-# 打开 http://localhost:3000
+# 启动前端 (终端 2)
+cd frontend
+npm run dev
+# → 运行在 http://localhost:3000
 ```
 
-### 一键安装（推荐）
+### 使用
+
+1. 打开 http://localhost:3000
+2. 点击 **💬 Chat** 开始对话
+3. 点击 **🔀 Flows** 创建工作流
+4. 或直接在飞书与 OpenClaw 对话
+
+---
+
+## 📋 项目结构
+
+```
+corpflow/
+├── frontend/           # React 前端
+│   ├── src/
+│   │   ├── App.tsx         # 主应用
+│   │   ├── Chat.tsx        # 聊天组件
+│   │   ├── FlowEditor.tsx  # 流程编辑器
+│   │   └── api.ts          # API 调用
+│   └── package.json
+│
+├── backend/            # Express 后端
+│   ├── server.js       # API 服务
+│   └── package.json
+│
+├── CORPFLOW.md        # System Prompt
+├── docs/
+│   └── TECH_PLAN.md    # 技术方案
+└── README.md
+```
+
+---
+
+## 🔧 配置
+
+### 飞书集成
+
+OpenClaw 已配置飞书，详见 [OpenClaw 文档](https://docs.openclaw.ai)。
+
+### 环境变量
 
 ```bash
-# 运行安装脚本
-curl -sSL https://raw.githubusercontent.com/gotonote/corpflow/main/scripts/install.sh | bash
+# 后端 (backend/.env)
+PORT=8081
 
-# 安装完成后，编辑 .env 填入你的 API Key
-vim corpflow/.env
-
-# 启动后端（终端 1）
-cd corpflow && go run cmd/server/main.go
-
-# 启动前端（终端 2）
-cd corpflow/frontend && npm run dev
-```
-
-### 移动端（Flutter）
-
-```bash
-cd mobile
-
-# 安装依赖
-flutter pub get
-
-# 开发运行
-flutter run
-
-# 构建 Android
-flutter build apk --release
+# 前端 (可选)
+VITE_API_URL=http://localhost:8081
 ```
 
 ---
 
-## 如何使用各功能
+## ⏰ 定时任务
 
-### 1. 与 AI 对话
+已配置以下自动任务：
 
-1. 进入 **Chat** 标签页
-2. 选择一个智能体
-3. 输入消息
-4. 获取 AI 回复
-
-### 2. 创建工作流
-
-1. 进入 **Flows** 标签页
-2. 从侧边栏拖拽节点
-3. 连接节点
-4. 配置属性
-5. 保存并执行
-
-### 3. 管理智能体
-
-1. 进入 **Agents** 标签页
-2. 点击 **+ 添加智能体**
-3. 设置名称、模型、提示词
-4. 保存
-
-### 4. 查看执行日志
-
-1. 进入 **Logs** 标签页
-2. 查看所有工作流运行记录
-3. 点击查看详情
-4. 查看步骤级执行过程
-
----
-
-## 连接移动端
-
-连接移动端到本地服务器：
-
-1. 确保手机和电脑在同一 WiFi 下
-2. 获取电脑 IP：
-   - Windows: `ipconfig`
-   - Mac/Linux: `ifconfig`
-3. 在移动端设置中输入：`http://你的IP:8080`
-
----
-
-## 环境变量
-
-```bash
-# AI 模型
-export OPENAI_API_KEY=sk-xxx
-export ANTHROPIC_API_KEY=sk-ant-xxx
-export ZHIPU_API_KEY=xxx
-export KIMI_API_KEY=xxx
-export DASHSCOPE_API_KEY=xxx
-export DEEPSEEK_API_KEY=xxx
-export MINIMAX_API_KEY=xxx
-
-# 渠道
-export FEISHU_APP_ID=xxx
-export FEISHU_APP_SECRET=xxx
-export WECHAT_APP_ID=xxx
-export TELEGRAM_BOT_TOKEN=xxx
-```
-
----
-
-## 问题排查
-
-| 问题 | 解决方案 |
-|------|----------|
-| 无法访问 localhost:3000 | 检查 Docker 是否运行：`docker ps` |
-| API 调用失败 | 确认已在设置中配置 API Key |
-| 移动端无法连接 | 检查防火墙 / 确保在同一网络 |
-| 流程无法执行 | 检查所有节点是否正确连接 |
-
----
-
-## API 接口
-
-| 方法 | 接口 | 描述 |
+| 任务 | 时间 | 说明 |
 |------|------|------|
-| POST | `/api/agents` | 创建智能体 |
-| GET | `/api/agents` | 列出智能体 |
-| POST | `/api/flows` | 创建流程 |
-| POST | `/api/flows/:id/execute` | 执行流程 |
-| POST | `/api/tools/execute` | 执行工具 |
-| GET | `/api/logs` | 获取执行日志 |
-| POST | `/webhook/feishu` | 飞书 Webhook |
+| `corpflow-okr-reminder` | 工作日 9:00 | OKR 进度提醒 |
+| `corpflow-weekly-summary` | 周五 18:00 | 周总结 |
 
 ---
 
-## 许可证
+## 🔌 API 接口
+
+| 方法 | 路径 | 说明 |
+|------|------|------|
+| GET | `/api/flows` | 获取流程列表 |
+| POST | `/api/flows` | 保存流程 |
+| POST | `/api/flows/:id/execute` | 执行流程 |
+| GET | `/api/okr` | 获取 OKR 列表 |
+| POST | `/api/chat/messages` | 发送消息 |
+
+---
+
+## 🛠️ 技术栈
+
+| 层级 | 技术 |
+|------|------|
+| 前端 | React + TypeScript + Vite + React Flow |
+| 后端 | Express + Node.js |
+| AI 引擎 | OpenClaw |
+| 渠道 | 飞书/微信/Telegram/Discord |
+
+---
+
+## 📄 许可证
 
 MIT License
+
+---
+
+*基于 OpenClaw 二次开发*

@@ -1,41 +1,46 @@
-# CorpFlow — 多智能体协作平台
+# CorpFlow — Multi-Agent Collaboration Platform
 
 <p align="center">
-  <strong>基于 OpenClaw 二次开发的企业级 AI 协作平台</strong>
+  <strong>Enterprise AI Collaboration Platform Built on OpenClaw</strong>
+</p>
+
+<p align="center">
+  <a href="README_zh.md">中文</a> | English
 </p>
 
 ---
 
-## 🏗️ 架构图
+## 🏗️ Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                         用户层                                   │
-│         飞书 │ 微信 │ Telegram │ Web 前端                     │
+│                         User Layer                               │
+│         Feishu │ WeChat │ Telegram │ Web Frontend            │
 └────────────────────────────┬────────────────────────────────────┘
                              │
 ┌────────────────────────────▼────────────────────────────────────┐
-│                    CorpFlow 前端 (React)                        │
+│                    CorpFlow Frontend (React)                   │
 │   ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐     │
-│   │   Home   │  │   Chat   │  │  Flows   │  │  OKR    │     │
+│   │   Home   │  │   Chat   │  │  Flows   │  │   OKR    │     │
 │   └──────────┘  └──────────┘  └──────────┘  └──────────┘     │
 └────────────────────────────┬────────────────────────────────────┘
                              │ REST API
 ┌────────────────────────────▼────────────────────────────────────┐
-│                   CorpFlow 后端 (Express)                       │
+│                   CorpFlow Backend (Express)                    │
 │   ┌──────────┐  ┌──────────┐  ┌──────────┐                   │
-│   │  流程管理  │  │   OKR   │  │  执行器  │                   │
+│   │   Flow   │  │   OKR    │  │ Executor │                   │
+│   │   Management│          │  │          │                   │
 │   └──────────┘  └──────────┘  └──────────┘                   │
 └────────────────────────────┬────────────────────────────────────┘
                              │
 ┌────────────────────────────▼────────────────────────────────────┐
 │                    OpenClaw Gateway                             │
 │   ┌─────────────────────────────────────────────────────────┐   │
-│   │                    Agent 调度层                          │   │
+│   │                    Agent Scheduler                       │   │
 │   │   🤖 CEO   │   👔 Manager   │   💻 Worker              │   │
 │   └─────────────────────────────────────────────────────────┘   │
 │   ┌─────────────────────────────────────────────────────────┐   │
-│   │                    工具层                                  │   │
+│   │                    Tools Layer                           │   │
 │   │   exec │ browser │ file │ web_search │ feishu_*       │   │
 │   └─────────────────────────────────────────────────────────┘   │
 └─────────────────────────────────────────────────────────────────┘
@@ -43,146 +48,146 @@
 
 ---
 
-## ✨ 功能特性
+## ✨ Features
 
-| 功能 | 说明 |
-|------|------|
-| 🤖 **多智能体** | CEO → Manager → Worker 三层协作 |
-| 🔀 **流程编排** | 可视化拖拽工作流 |
-| 📊 **OKR 管理** | 目标设定与进度追踪 |
-| ⏰ **定时任务** | 自动生成报告和提醒 |
-| 💬 **多渠道** | 飞书/微信/Telegram/Discord |
+| Feature | Description |
+|---------|-------------|
+| 🤖 **Multi-Agent** | CEO → Manager → Worker three-tier collaboration |
+| 🔀 **Flow Orchestration** | Visual drag-and-drop workflow builder |
+| 📊 **OKR Management** | Goal setting and progress tracking |
+| ⏰ **Scheduled Tasks** | Auto-generated reports and reminders |
+| 💬 **Multi-Channel** | Feishu/WeChat/Telegram/Discord |
 
 ---
 
-## 🚀 快速开始
+## 🚀 Quick Start
 
-### 环境要求
+### Requirements
 
-| 组件 | 版本 |
-|------|------|
+| Component | Version |
+|-----------|---------|
 | Node.js | 18+ |
 | npm | 9+ |
 
-### 安装
+### Installation
 
 ```bash
-# 克隆项目
+# Clone project
 git clone https://github.com/gotonote/corpflow.git
 cd corpflow
 
-# 安装前端依赖
+# Install frontend dependencies
 cd frontend
 npm install
 
-# 安装后端依赖
+# Install backend dependencies
 cd ../backend
 npm install
 ```
 
-### 启动
+### Start
 
 ```bash
-# 启动后端 (终端 1)
+# Start backend (Terminal 1)
 cd backend
 npm run dev
-# → 运行在 http://localhost:8081
+# → Running on http://localhost:8081
 
-# 启动前端 (终端 2)
+# Start frontend (Terminal 2)
 cd frontend
 npm run dev
-# → 运行在 http://localhost:3000
+# → Running on http://localhost:3000
 ```
 
-### 使用
+### Usage
 
-1. 打开 http://localhost:3000
-2. 点击 **💬 Chat** 开始对话
-3. 点击 **🔀 Flows** 创建工作流
-4. 或直接在飞书与 OpenClaw 对话
+1. Open http://localhost:3000
+2. Click **💬 Chat** to start conversation
+3. Click **🔀 Flows** to create workflow
+4. Or chat directly with OpenClaw in Feishu
 
 ---
 
-## 📋 项目结构
+## 📋 Project Structure
 
 ```
 corpflow/
-├── frontend/           # React 前端
+├── frontend/           # React frontend
 │   ├── src/
-│   │   ├── App.tsx         # 主应用
-│   │   ├── Chat.tsx        # 聊天组件
-│   │   ├── FlowEditor.tsx  # 流程编辑器
-│   │   └── api.ts          # API 调用
+│   │   ├── App.tsx         # Main app
+│   │   ├── Chat.tsx       # Chat component
+│   │   ├── FlowEditor.tsx # Flow editor
+│   │   └── api.ts         # API calls
 │   └── package.json
 │
-├── backend/            # Express 后端
-│   ├── server.js       # API 服务
+├── backend/            # Express backend
+│   ├── server.js       # API service
 │   └── package.json
 │
 ├── CORPFLOW.md        # System Prompt
 ├── docs/
-│   └── TECH_PLAN.md    # 技术方案
+│   └── TECH_PLAN.md    # Technical plan
 └── README.md
 ```
 
 ---
 
-## 🔧 配置
+## 🔧 Configuration
 
-### 飞书集成
+### Feishu Integration
 
-OpenClaw 已配置飞书，详见 [OpenClaw 文档](https://docs.openclaw.ai)。
+OpenClaw already has Feishu configured. See [OpenClaw Docs](https://docs.openclaw.ai).
 
-### 环境变量
+### Environment Variables
 
 ```bash
-# 后端 (backend/.env)
+# Backend (backend/.env)
 PORT=8081
 
-# 前端 (可选)
+# Frontend (optional)
 VITE_API_URL=http://localhost:8081
 ```
 
 ---
 
-## ⏰ 定时任务
+## ⏰ Scheduled Tasks
 
-已配置以下自动任务：
+Auto-configured tasks:
 
-| 任务 | 时间 | 说明 |
-|------|------|------|
-| `corpflow-okr-reminder` | 工作日 9:00 | OKR 进度提醒 |
-| `corpflow-weekly-summary` | 周五 18:00 | 周总结 |
-
----
-
-## 🔌 API 接口
-
-| 方法 | 路径 | 说明 |
-|------|------|------|
-| GET | `/api/flows` | 获取流程列表 |
-| POST | `/api/flows` | 保存流程 |
-| POST | `/api/flows/:id/execute` | 执行流程 |
-| GET | `/api/okr` | 获取 OKR 列表 |
-| POST | `/api/chat/messages` | 发送消息 |
+| Task | Time | Description |
+|------|------|-------------|
+| `corpflow-okr-reminder` | Weekdays 9:00 | OKR progress reminder |
+| `corpflow-weekly-summary` | Friday 18:00 | Weekly summary |
 
 ---
 
-## 🛠️ 技术栈
+## 🔌 API Endpoints
 
-| 层级 | 技术 |
-|------|------|
-| 前端 | React + TypeScript + Vite + React Flow |
-| 后端 | Express + Node.js |
-| AI 引擎 | OpenClaw |
-| 渠道 | 飞书/微信/Telegram/Discord |
+| Method | Path | Description |
+|--------|------|-------------|
+| GET | `/api/flows` | Get flow list |
+| POST | `/api/flows` | Save flow |
+| POST | `/api/flows/:id/execute` | Execute flow |
+| GET | `/api/okr` | Get OKR list |
+| POST | `/api/chat/messages` | Send message |
 
 ---
 
-## 📄 许可证
+## 🛠️ Tech Stack
+
+| Layer | Technology |
+|--------|------------|
+| Frontend | React + TypeScript + Vite + React Flow |
+| Backend | Express + Node.js |
+| AI Engine | OpenClaw |
+| Channels | Feishu/WeChat/Telegram/Discord |
+
+---
+
+## 📄 License
 
 MIT License
 
 ---
 
-*基于 OpenClaw 二次开发*
+*Built on OpenClaw*
