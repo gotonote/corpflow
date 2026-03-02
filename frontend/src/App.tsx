@@ -4,25 +4,34 @@ import './App.css'
 
 type Tab = 'home' | 'chat' | 'flow' | 'agents' | 'tools' | 'logs' | 'settings'
 
-function App() {
+interface AppProps {
+  onNavigate?: (tab: Tab) => void
+}
+
+function App({ onNavigate }: AppProps) {
   const [activeTab, setActiveTab] = useState<Tab>('home')
+
+  const handleNavigate = (tab: Tab) => {
+    setActiveTab(tab)
+    onNavigate?.(tab)
+  }
 
   return (
     <div className="app">
       <header className="header">
         <h1>🚀 CorpFlow</h1>
         <nav>
-          <button className={activeTab === 'home' ? 'active' : ''} onClick={() => setActiveTab('home')}>🏠 Home</button>
-          <button className={activeTab === 'chat' ? 'active' : ''} onClick={() => setActiveTab('chat')}>💬 Chat</button>
-          <button className={activeTab === 'flow' ? 'active' : ''} onClick={() => setActiveTab('flow')}>🔀 Flows</button>
-          <button className={activeTab === 'agents' ? 'active' : ''} onClick={() => setActiveTab('agents')}>🤖 Agents</button>
-          <button className={activeTab === 'tools' ? 'active' : ''} onClick={() => setActiveTab('tools')}>🔧 Tools</button>
-          <button className={activeTab === 'logs' ? 'active' : ''} onClick={() => setActiveTab('logs')}>📋 Logs</button>
-          <button className={activeTab === 'settings' ? 'active' : ''} onClick={() => setActiveTab('settings')}>⚙️</button>
+          <button className={activeTab === 'home' ? 'active' : ''} onClick={() => handleNavigate('home')}>🏠 Home</button>
+          <button className={activeTab === 'chat' ? 'active' : ''} onClick={() => handleNavigate('chat')}>💬 Chat</button>
+          <button className={activeTab === 'flow' ? 'active' : ''} onClick={() => handleNavigate('flow')}>🔀 Flows</button>
+          <button className={activeTab === 'agents' ? 'active' : ''} onClick={() => handleNavigate('agents')}>🤖 Agents</button>
+          <button className={activeTab === 'tools' ? 'active' : ''} onClick={() => handleNavigate('tools')}>🔧 Tools</button>
+          <button className={activeTab === 'logs' ? 'active' : ''} onClick={() => handleNavigate('logs')}>📋 Logs</button>
+          <button className={activeTab === 'settings' ? 'active' : ''} onClick={() => handleNavigate('settings')}>⚙️</button>
         </nav>
       </header>
       <main className="main">
-        {activeTab === 'home' && <HomePanel />}
+        {activeTab === 'home' && <HomePanel onNavigate={handleNavigate} />}
         {activeTab === 'chat' && <ChatPanel />}
         {activeTab === 'flow' && <FlowPanel />}
         {activeTab === 'agents' && <AgentsPanel />}
@@ -48,15 +57,15 @@ const templates = [
   { id: 'data-analyzer', name: '📈 Data Analyzer', desc: 'Data insights' },
 ]
 
-function HomePanel() {
+function HomePanel({ onNavigate }: { onNavigate?: (tab: Tab) => void }) {
   return (
     <div className="home-container">
       <section className="welcome-section">
         <h2>Welcome to CorpFlow</h2>
         <p>Multi-Agent Collaboration Platform</p>
         <div className="quick-actions">
-          <button className="btn-primary">🚀 Start Chat</button>
-          <button className="btn-secondary">➕ Create Flow</button>
+          <button className="btn-primary" onClick={() => onNavigate?.('chat')}>🚀 Start Chat</button>
+          <button className="btn-secondary" onClick={() => onNavigate?.('flow')}>➕ Create Flow</button>
         </div>
       </section>
 

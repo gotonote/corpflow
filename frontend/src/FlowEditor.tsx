@@ -17,6 +17,7 @@ import {
 } from '@xyflow/react'
 import '@xyflow/react/dist/style.css'
 import './FlowEditor.css'
+import { flowAPI, executor } from './api'
 
 // 节点数据类型
 type NodeData = {
@@ -415,8 +416,9 @@ export default function FlowEditor() {
   }
 
   // 保存流程
-  const handleSave = () => {
+  const handleSave = async () => {
     const flowData = {
+      name: '新流程',
       nodes: nodes.map(n => ({
         id: n.id,
         type: n.type,
@@ -429,16 +431,25 @@ export default function FlowEditor() {
         target: e.target,
       })),
     }
-    console.log('保存流程:', flowData)
-    // TODO: 调用API保存
-    alert('流程已保存!')
+    try {
+      await flowAPI.save(flowData)
+      alert('流程已保存!')
+    } catch (err) {
+      console.error(err)
+      alert('保存失败: ' + err)
+    }
   }
 
   // 测试运行
-  const handleRun = () => {
-    console.log('执行流程:', { nodes, edges })
-    // TODO: 调用执行API
-    alert('流程执行中...')
+  const handleRun = async () => {
+    try {
+      alert('流程执行中...')
+      const result = await executor.run(nodes, { text: '测试输入' })
+      alert('执行完成: ' + JSON.stringify(result))
+    } catch (err) {
+      console.error(err)
+      alert('执行失败: ' + err)
+    }
   }
 
   return (
